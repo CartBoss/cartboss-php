@@ -3,48 +3,22 @@
 namespace CartBoss\Api\Interceptors;
 
 use CartBoss\Api\Utils;
-use Delight\Cookie\Cookie;
 
 class AttributionInterceptor
 {
-    const COOKIE_NAME = "cartboss_attribution_token";
-    const COOKIE_TTL = 60 * 60 * 24 * 365;
     const QUERY_VAR = "cb__att";
 
     /**
-     * @var Cookie
+     * @var string|null
      */
-    private $cookie;
+    private $token;
 
-    public function __construct($source = null)
+    public function __construct()
     {
-        $cookie = new Cookie(self::COOKIE_NAME);
-        $cookie->setMaxAge(self::COOKIE_TTL);
-        $cookie->setSameSiteRestriction(null);
-        $this->cookie = $cookie;
-
-        $token = Utils::get_array_value($source ?? $_GET, self::QUERY_VAR, null);
-        if ($token) {
-            $this->setToken($token);
+        $token = Utils::get_array_value($_GET, self::QUERY_VAR, null);
+        if (isset($token)) {
+            $this->token = trim($token);
         }
-    }
-
-    /**
-     * @param string|null $token
-     */
-    private function setToken(?string $token): void
-    {
-        if (is_string($token) && strlen($token) > 0) {
-            $this->cookie->setValue($token);
-            $this->cookie->saveAndSet();
-        } else {
-            $this->clearCookieStorage();
-        }
-    }
-
-    public function clearCookieStorage()
-    {
-        $this->cookie->deleteAndUnset();
     }
 
     /**
@@ -52,6 +26,6 @@ class AttributionInterceptor
      */
     public function getToken(): ?string
     {
-        return $this->cookie::get(self::COOKIE_NAME, null);
+        return $this->token;
     }
 }

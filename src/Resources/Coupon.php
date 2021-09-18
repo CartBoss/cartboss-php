@@ -92,9 +92,4 @@ class Coupon
     {
         return $this->type == self::TYPE_FREE_SHIPPING;
     }
-
-    public function isValid(): bool
-    {
-        return isset($this->code, $this->type, $this->value);
-    }
 }

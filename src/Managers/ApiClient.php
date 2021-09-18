@@ -40,12 +40,12 @@ class ApiClient
     /**
      * Default response timeout (in seconds).
      */
-    const DEFAULT_TIMEOUT = 10;
+    const DEFAULT_TIMEOUT = 15;
 
     /**
      * Default connect timeout (in seconds).
      */
-    const DEFAULT_CONNECT_TIMEOUT = 3;
+    const DEFAULT_CONNECT_TIMEOUT = 5;
 
     /**
      * HTTP status code for an empty ok response.

@@ -40,10 +40,18 @@ class CartBoss
 
     public function __construct($api_key)
     {
-        $this->attribution_interceptor = new AttributionInterceptor($_GET);
+        $this->attribution_interceptor = new AttributionInterceptor();
         $this->discount_interceptor = new DiscountInterceptor($api_key);
         $this->contact_interceptor = new ContactInterceptor($api_key);
         $this->api_client = new ApiClient($api_key);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAttributionToken(): ?string
+    {
+        return $this->attribution_interceptor->getToken();
     }
 
     /**
@@ -92,18 +100,7 @@ class CartBoss
      */
     public function sendOrderEvent(OrderBaseEvent $event): ?stdClass
     {
-        // attach attribution (if any)
-        $event->setAttribution($this->attribution_interceptor->getToken());
-
-        // send event
-        $response = $this->sendEvent($event);
-
-        // purchase event must remove attribution token from the cookie
-        if (get_class($event) == 'PurchaseEvent') {
-            $this->attribution_interceptor->clearCookieStorage();
-        }
-
-        return $response;
+        return $this->sendEvent($event);
     }
 
     /**
