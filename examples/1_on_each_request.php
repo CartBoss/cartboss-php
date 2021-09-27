@@ -33,6 +33,8 @@ if ($cartboss->getAttributionToken()) {
     // store to database
 
     // store to cookie, expiration 7 days
+
+    // don't forget to clear attribution token from "session" once purchase event is sent
 }
 
 /*

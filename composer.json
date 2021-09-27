@@ -8,10 +8,11 @@
     "ext-curl": "*",
     "ext-json": "*",
     "ext-openssl": "*",
+    "ext-mbstring": "*",
     "composer/ca-bundle": "^1.1",
     "delight-im/cookie": "^3.4",
     "guzzlehttp/guzzle": "^7.3",
-    "rakit/validation": "^1.4"
+    "rakit/validation": "^1.4",
   },
   "config": {
     "sort-packages": true
