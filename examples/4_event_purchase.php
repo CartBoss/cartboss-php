@@ -1,13 +1,9 @@
 <?php
 
-/*
- * Same as ATC event with addition of:
- * - $order->setNumber('...);
- * - $event->setAttribution('...');
- *
- */
+use CartBoss\Api\Exceptions\ApiException;
+use CartBoss\Api\Exceptions\ValidationException;
 
-require "../vendor/autoload.php";
+require_once __DIR__ . '/../cartboss-php.php';
 
 $cartboss = new \CartBoss\Api\CartBoss("");
 
@@ -55,7 +51,6 @@ try {
      *
      * Please see 1_on_each_request.php for more info.
      */
-    //
     $event->setAttribution('...');
 
     // attach contact and order
@@ -66,8 +61,11 @@ try {
     $cartboss->sendOrderEvent($event);
     echo "event {$event->getEventName()} successfully sent";
 
-} catch (Exception $e) {
-    echo "<h1>Event failed</h1>";
-    echo "<pre>";
+} catch (ValidationException $e) {
+    echo "<h1>Event validation failed</h1>";
+    var_dump($e->getMessage());
+
+} catch (ApiException $e) {
+    echo "<h1>Api failed</h1>";
     var_dump($e->getMessage());
 }

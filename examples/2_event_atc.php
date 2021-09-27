@@ -6,14 +6,17 @@
  * Response is 204 empty or 400-500 ... in production you might want to log the error
  */
 
-require "../vendor/autoload.php";
+use CartBoss\Api\Exceptions\ApiException;
+use CartBoss\Api\Exceptions\ValidationException;
+
+require_once __DIR__ . '/../cartboss-php.php';
 
 $cartboss = new \CartBoss\Api\CartBoss("");
 
 $contact = new \CartBoss\Api\Resources\Contact();
 $contact->setPhone(\CartBoss\Api\Utils::get_array_value($_POST, 'phone'));
 $contact->setEmail(\CartBoss\Api\Utils::get_array_value($_POST, 'email'));
-$contact->setIpAddress('...'); // you can omit this setter, for auto IP detection
+$contact->setIpAddress('...'); // you can skip this setter, for auto IP detection
 $contact->setAcceptsMarketing(true); // if "I want to receive news and promotions" checkbox is visible and checked || varies by store policy how to handle this field
 
 $contact->setFirstName(\CartBoss\Api\Utils::get_array_value($_POST, 'first_name'));
@@ -55,8 +58,11 @@ try {
     $cartboss->sendOrderEvent($event);
     echo "event {$event->getEventName()} successfully sent";
 
-} catch (Exception $e) {
-    echo "<h1>Event failed</h1>";
-    echo "<pre>";
+} catch (ValidationException $e) {
+    echo "<h1>Event validation failed</h1>";
+    var_dump($e->getMessage());
+
+} catch (ApiException $e) {
+    echo "<h1>Api failed</h1>";
     var_dump($e->getMessage());
 }

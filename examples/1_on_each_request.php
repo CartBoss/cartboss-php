@@ -1,14 +1,14 @@
 <?php
 
-require "../vendor/autoload.php";
-
-$cartboss = new \CartBoss\Api\CartBoss("");
+require_once __DIR__ . '/../cartboss-php.php';
 
 /*
  * CartBoss SDK offers three helper methods to parse and decode various information, injected into all SMS urls that point back to your website.
  *
  * It is recommended to run logic below, at each GET request.
  */
+
+$cartboss = new \CartBoss\Api\CartBoss("");
 
 
 /*
