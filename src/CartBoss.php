@@ -18,7 +18,7 @@ use stdClass;
 define('CARTBOSS_PATH', dirname(__FILE__));
 define('CARTBOSS_VERSION', '1.0.0');
 
-require 'vendor/autoload.php';
+//require 'vendor/autoload.php';
 
 class CartBoss
 {
