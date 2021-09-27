@@ -21,6 +21,14 @@ class BillingAddress extends BaseAddress
         return !empty($this->phone) && strlen($this->phone) > 5;
     }
 
+    public function getPayload(): array
+    {
+        return array_merge(parent::getPayload(), array(
+            'phone' => $this->getPhone(),
+            'email' => $this->getEmail(),
+        ));
+    }
+
     /**
      * @return string|null
      */
@@ -51,13 +59,5 @@ class BillingAddress extends BaseAddress
     public function setEmail(?string $email): void
     {
         $this->email = $email;
-    }
-
-    public function getPayload(): array
-    {
-        return array_merge(parent::getPayload(), array(
-            'phone' => $this->getPhone(),
-            'email' => $this->getEmail(),
-        ));
     }
 }

@@ -2,6 +2,8 @@
 
 namespace CartBoss\Api;
 
+use CartBoss\Api\Exceptions\ApiException;
+use CartBoss\Api\Exceptions\ValidationException;
 use CartBoss\Api\Interceptors\AttributionInterceptor;
 use CartBoss\Api\Interceptors\ContactInterceptor;
 use CartBoss\Api\Interceptors\DiscountInterceptor;
@@ -10,7 +12,6 @@ use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Resources\Coupon;
 use CartBoss\Api\Resources\Events\BaseEvent;
 use CartBoss\Api\Resources\Events\OrderBaseEvent;
-use Exception;
 use Rakit\Validation\Validator;
 use stdClass;
 
@@ -71,10 +72,21 @@ class CartBoss
     }
 
     /**
+     * @param OrderBaseEvent $event
+     * @return stdClass|null
+     * @throws ApiException
+     * @throws ValidationException
+     */
+    public function sendOrderEvent(OrderBaseEvent $event): ?stdClass
+    {
+        return $this->sendEvent($event);
+    }
+
+    /**
      * @param BaseEvent $event
      * @return stdClass|null
-     * @throws Exceptions\ApiException
-     * @throws Exception
+     * @throws ValidationException
+     * @throws ApiException
      */
     public function sendEvent(BaseEvent $event): ?stdClass
     {
@@ -85,7 +97,7 @@ class CartBoss
 
         // simply throw exception with error messages
         if ($validation->fails()) {
-            throw new Exception("Event '{$event->getEventName()}' has errors and won't be sent: " . print_r($validation->errors()->all(), true));
+            throw new ValidationException("Event '{$event->getEventName()}' has errors and won't be sent: " . print_r($validation->errors()->all(), true));
         }
 
         // send it to CartBoss
@@ -93,20 +105,9 @@ class CartBoss
     }
 
     /**
-     * @param OrderBaseEvent $event
-     * @return stdClass|null
-     * @throws Exceptions\ApiException
-     * @throws Exception
-     */
-    public function sendOrderEvent(OrderBaseEvent $event): ?stdClass
-    {
-        return $this->sendEvent($event);
-    }
-
-    /**
      * @param string $order_id
      * @return stdClass|null
-     * @throws Exceptions\ApiException
+     * @throws ApiException
      */
     public function getOrder(string $order_id): ?stdClass
     {

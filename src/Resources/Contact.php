@@ -26,6 +26,15 @@ class Contact extends BillingAddress implements PayloadInterface
         $this->user_agent = Utils::get_user_agent();
     }
 
+    public function getPayload(): array
+    {
+        return array_merge(parent::getPayload(), array(
+            'ip_address' => $this->getIpAddress(),
+            'user_agent' => $this->getUserAgent(),
+            'accepts_marketing' => $this->getAcceptsMarketing(),
+        ));
+    }
+
     /**
      * @return string|null
      */
@@ -64,15 +73,6 @@ class Contact extends BillingAddress implements PayloadInterface
     public function setAcceptsMarketing(bool $accepts_marketing): void
     {
         $this->accepts_marketing = $accepts_marketing;
-    }
-
-    public function getPayload(): array
-    {
-        return array_merge(parent::getPayload(), array(
-            'ip_address' => $this->getIpAddress(),
-            'user_agent' => $this->getUserAgent(),
-            'accepts_marketing' => $this->getAcceptsMarketing(),
-        ));
     }
 
 }

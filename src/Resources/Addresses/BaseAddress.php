@@ -43,6 +43,21 @@ abstract class BaseAddress implements PayloadInterface
      */
     private $country;
 
+    public function getPayload(): array
+    {
+        return array(
+            'first_name' => $this->getFirstName(),
+            'last_name' => $this->getLastName(),
+            'address_1' => $this->getAddress1(),
+            'address_2' => $this->getAddress2(),
+            'company' => $this->getCompany(),
+            'city' => $this->getCity(),
+            'state' => $this->getState(),
+            'postal_code' => $this->getPostalCode(),
+            'country' => $this->getCountry(),
+        );
+    }
+
     /**
      * @return string|null
      */
@@ -185,21 +200,6 @@ abstract class BaseAddress implements PayloadInterface
     public function setCountry(?string $country): void
     {
         $this->country = $country;
-    }
-
-    public function getPayload(): array
-    {
-        return array(
-            'first_name' => $this->getFirstName(),
-            'last_name' => $this->getLastName(),
-            'address_1' => $this->getAddress1(),
-            'address_2' => $this->getAddress2(),
-            'company' => $this->getCompany(),
-            'city' => $this->getCity(),
-            'state' => $this->getState(),
-            'postal_code' => $this->getPostalCode(),
-            'country' => $this->getCountry(),
-        );
     }
 
 }
