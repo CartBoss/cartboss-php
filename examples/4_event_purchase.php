@@ -68,4 +68,9 @@ try {
 } catch (ApiException $e) {
     echo "<h1>Api failed</h1>";
     var_dump($e->getMessage());
+
+} finally {
+
+    // don't forget to clear attribution token
+    unset($_SESSION['cb_attribution_token']);
 }
