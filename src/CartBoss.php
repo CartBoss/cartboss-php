@@ -16,7 +16,7 @@ use Rakit\Validation\Validator;
 use stdClass;
 
 define('CARTBOSS_PATH', dirname(__FILE__));
-define('CARTBOSS_VERSION', '1.0.0');
+define('CARTBOSS_VERSION', '1.0.7');
 
 //require 'vendor/autoload.php';
 
@@ -97,7 +97,7 @@ class CartBoss
 
         // simply throw exception with error messages
         if ($validation->fails()) {
-            throw new ValidationException("Event '{$event->getEventName()}' has errors and won't be sent: " . print_r($validation->errors()->all(), true));
+            throw new ValidationException(print_r($validation->errors()->all(), true));
         }
 
         // send it to CartBoss
