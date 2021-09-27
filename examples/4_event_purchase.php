@@ -28,23 +28,21 @@ $order->setId('...'); // this is unique order id, can be actual order id, md5(or
 $order->setValue(19.99); // total order value
 $order->setCurrency('EUR'); // order currency
 $order->setIsCod(true);
-
 $order->setNumber('...'); // order number once placed (eg: #128732)
 
-// ... iterate through all cart lines
+// ... iterate through all cart items
 $cart_item = new \CartBoss\Api\Resources\CartItem();
 $cart_item->setName('Product #1'); // required for sms personalization
-$cart_item->setId('P1');
-$cart_item->setVariationId("V9");
-$cart_item->setPrice(14.99);
-$cart_item->setQuantity(1);
+$cart_item->setId('P1'); // product id
+$cart_item->setVariationId("V9"); // product variation id
+$cart_item->setPrice(9.99); // product price [quantity = 1]
+$cart_item->setQuantity(2); // quantity
 $order->addCartItem($cart_item);
 
 
 try {
     // create Purchase event
     $event = new \CartBoss\Api\Resources\Events\PurchaseEvent();
-
     /*
      * Attribution token tells CartBoss purchase was made as a result of clicking CartBoss link (SMS).
      * If no attribution token is attached to purchase event, CartBoss will exclude it from statistics, but will still be able to send additional post-purchase messages (if defined)
@@ -52,13 +50,13 @@ try {
      * Please see 1_on_each_request.php for more info.
      */
     $event->setAttribution('...');
-
-    // attach contact and order
+    // attach contact
     $event->setContact($contact);
+    // attach order
     $event->setOrder($order);
-
     // send it to CartBoss, if invalid or request fails, exception is thrown
     $cartboss->sendOrderEvent($event);
+
     echo "event {$event->getEventName()} successfully sent";
 
 } catch (ValidationException $e) {
@@ -71,6 +69,6 @@ try {
 
 } finally {
 
-    // don't forget to clear attribution token
+    // don't forget to clear/unset attribution token as it should be reported with only one purchase event
     unset($_SESSION['cb_attribution_token']);
 }

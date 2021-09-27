@@ -31,7 +31,7 @@ $contact->setCountry(\CartBoss\Api\Utils::get_array_value($_POST, 'country_code'
 
 $order = new \CartBoss\Api\Resources\Order();
 $order->setId('...'); // this is unique order id, can be actual internal order id, md5(order_id), as long as it uniquely represents one exact order
-$order->setValue(19.99); // total order value
+$order->setValue(19.98); // total order value
 $order->setCurrency('EUR'); // order currency
 $order->setIsCod(true);
 $order->setCheckoutUrl('https://yoursite/cartboss-order-restore?order_id=foo&x=1&bar=baz'); // link to restore_cart.php with order_id (same as ->setId(...))
@@ -39,23 +39,22 @@ $order->setCheckoutUrl('https://yoursite/cartboss-order-restore?order_id=foo&x=1
 // ... iterate through all cart lines
 $cart_item = new \CartBoss\Api\Resources\CartItem();
 $cart_item->setName('Product #1'); // required for sms personalization
-$cart_item->setId('P1');
-$cart_item->setVariationId("V9");
-$cart_item->setPrice(14.99);
-$cart_item->setQuantity(1);
+$cart_item->setId('P1'); // product id
+$cart_item->setVariationId("V9"); // product variation id
+$cart_item->setPrice(9.99); // product price [quantity = 1]
+$cart_item->setQuantity(2); // quantity
 $order->addCartItem($cart_item);
-
 
 try {
     // create ATC event
     $event = new \CartBoss\Api\Resources\Events\AddToCartEvent();
-
-    // attach contact and order
+    // attach contact
     $event->setContact($contact);
+    // attach order
     $event->setOrder($order);
-
     // send it to CartBoss, if invalid or request fails, exception is thrown
     $cartboss->sendOrderEvent($event);
+
     echo "event {$event->getEventName()} successfully sent";
 
 } catch (ValidationException $e) {
