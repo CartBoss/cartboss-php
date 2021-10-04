@@ -4,7 +4,7 @@ namespace CartBoss\Api\Resources\Events;
 
 use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Resources\Order;
-use CartBoss\Api\Resources\PayloadInterface;
+use CartBoss\Api\Interfaces\PayloadInterface;
 
 abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
 {

@@ -7,11 +7,12 @@
     "php": ">=7.2",
     "ext-curl": "*",
     "ext-json": "*",
-    "ext-openssl": "*",
     "ext-mbstring": "*",
+    "ext-openssl": "*",
     "composer/ca-bundle": "^1.1",
     "delight-im/cookie": "^3.4",
     "guzzlehttp/guzzle": "^7.3",
+    "ircmaxell/random-lib": "^1.2",
     "rakit/validation": "^1.4"
   },
   "config": {

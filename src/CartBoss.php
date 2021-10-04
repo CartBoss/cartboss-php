@@ -8,6 +8,7 @@ use CartBoss\Api\Interceptors\AttributionInterceptor;
 use CartBoss\Api\Interceptors\ContactInterceptor;
 use CartBoss\Api\Interceptors\DiscountInterceptor;
 use CartBoss\Api\Managers\ApiClient;
+use CartBoss\Api\Managers\Session;
 use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Resources\Coupon;
 use CartBoss\Api\Resources\Events\BaseEvent;
@@ -16,7 +17,7 @@ use Rakit\Validation\Validator;
 use stdClass;
 
 define('CARTBOSS_PATH', dirname(__FILE__));
-define('CARTBOSS_VERSION', '1.0.7');
+define('CARTBOSS_VERSION', '1.1.0');
 
 //require 'vendor/autoload.php';
 
@@ -39,12 +40,13 @@ class CartBoss
      */
     private $api_client;
 
-    public function __construct($api_key)
+    public function __construct(string $api_key)
     {
+        $this->api_client = new ApiClient($api_key);
+
         $this->attribution_interceptor = new AttributionInterceptor();
         $this->discount_interceptor = new DiscountInterceptor($api_key);
         $this->contact_interceptor = new ContactInterceptor($api_key);
-        $this->api_client = new ApiClient($api_key);
     }
 
     /**

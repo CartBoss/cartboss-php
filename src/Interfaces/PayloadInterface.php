@@ -1,6 +1,6 @@
 <?php
 
-namespace CartBoss\Api\Resources;
+namespace CartBoss\Api\Interfaces;
 
 interface PayloadInterface
 {

@@ -1,6 +1,54 @@
 <?php
 
+
 require_once __DIR__ . '/../cartboss-php.php';
+
+const API_KEY = 'GrpYQV3GGgUYMk4JIhJ2TPoC6GEHP7Tk6ApwiyGYtGdj76UnnfQiHYtzSqUM9kk4';
+const IP_ADDRESS = '127.0.0.1';
+
+// assume this is your visitor's order object/array/active-record
+const CURRENT_ORDER = array(
+    'id' => 'foo',
+    'value' => 40.0,
+    'currency' => 'EUR',
+    'state' => 'abandoned',
+    'method' => 'COD',
+    'cart_items' => array(
+        array(
+            'id' => 'P1',
+            'variation_id' => 'P1V3',
+            'name' => 'Product 1',
+            'price' => 10.0,
+            'quantity' => 2,
+        ),
+        array(
+            'id' => 'P2',
+            'variation_id' => null,
+            'name' => 'Product 2',
+            'price' => 20.0,
+            'quantity' => 1,
+        )
+    ),
+    // ...
+);
+
+function template($file, $args)
+{
+    // ensure the file exists
+    if (!file_exists($file)) {
+        return '';
+    }
+
+    // Make values in the associative array easier to access by extracting them
+    if (is_array($args)) {
+        extract($args);
+    }
+
+    // buffer the output (including the file is "output")
+    ob_start();
+    include $file;
+    return ob_get_clean();
+}
 
 /*
  * CartBoss SDK offers three helper methods to parse and decode various information, injected into all SMS urls that point back to your website.
@@ -8,7 +56,7 @@ require_once __DIR__ . '/../cartboss-php.php';
  * It is recommended to run logic below, at each GET request.
  */
 
-$cartboss = new \CartBoss\Api\CartBoss("");
+$cartboss = new \CartBoss\Api\CartBoss(API_KEY);
 
 
 /*
@@ -32,9 +80,9 @@ if ($cartboss->getAttributionToken()) {
 
     // store to database
 
-    // store to cookie, expiration 7 days
+    // or, store to cookie, expiration 7 days
 
-    // don't forget to clear attribution token from "session" once purchase event is sent
+    // and, don't forget to clear attribution token from "session" once purchase event is sent
 }
 
 /*

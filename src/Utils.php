@@ -89,4 +89,22 @@ class Utils
             return null;
         }
     }
+
+    public static function aes_encode($secret, $input)
+    {
+        try {
+            $ivlen = openssl_cipher_iv_length('aes-256-cbc');
+            $iv = openssl_random_pseudo_bytes($ivlen);
+            $secret = mb_substr($secret, 0, 32);
+            $encrypted = openssl_encrypt($input, 'aes-256-cbc', $secret, 0, $iv);
+            return array(
+                'iv'=>$iv,
+                'chipher'=>$encrypted
+                );
+
+//            return json_decode($decrypted, true);
+        } catch (Exception $e) {
+            return null;
+        }
+    }
 }

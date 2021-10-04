@@ -2,7 +2,7 @@
 
 namespace CartBoss\Api\Resources\Events;
 
-use CartBoss\Api\Resources\PayloadInterface;
+use CartBoss\Api\Interfaces\PayloadInterface;
 
 abstract class BaseEvent implements PayloadInterface
 {

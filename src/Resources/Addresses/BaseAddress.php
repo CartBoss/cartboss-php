@@ -2,7 +2,7 @@
 
 namespace CartBoss\Api\Resources\Addresses;
 
-use CartBoss\Api\Resources\PayloadInterface;
+use CartBoss\Api\Interfaces\PayloadInterface;
 
 abstract class BaseAddress implements PayloadInterface
 {

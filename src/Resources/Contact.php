@@ -2,6 +2,7 @@
 
 namespace CartBoss\Api\Resources;
 
+use CartBoss\Api\Interfaces\PayloadInterface;
 use CartBoss\Api\Resources\Addresses\BillingAddress;
 use CartBoss\Api\Utils;
 
@@ -44,9 +45,9 @@ class Contact extends BillingAddress implements PayloadInterface
     }
 
     /**
-     * @param string|null $ip_address
+     * @param string $ip_address
      */
-    public function setIpAddress(?string $ip_address): void
+    public function setIpAddress(string $ip_address): void
     {
         $this->ip_address = $ip_address;
     }
