@@ -39,10 +39,15 @@ class CartBoss
      * @var ApiClient
      */
     private $api_client;
+    /**
+     * @var Session
+     */
+    private $session;
 
     public function __construct(string $api_key)
     {
         $this->api_client = new ApiClient($api_key);
+        $this->session = new Session();
 
         $this->attribution_interceptor = new AttributionInterceptor();
         $this->discount_interceptor = new DiscountInterceptor($api_key);
@@ -55,6 +60,14 @@ class CartBoss
     public function getAttributionToken(): ?string
     {
         return $this->attribution_interceptor->getToken();
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession(): Session
+    {
+        return $this->session;
     }
 
     /**

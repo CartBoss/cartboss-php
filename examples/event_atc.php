@@ -10,11 +10,13 @@ use CartBoss\Api\Resources\Order;
 use CartBoss\Api\Utils;
 
 require_once __DIR__ . '/global.php';
+global $cartboss;
 
-// $session_order = $_SESSION['order_id']
-$session_order = CURRENT_ORDER;
+$active_order = CURRENT_ORDER;
 
-if (!$session_order || $session_order['state'] != 'abandoned') {
+// test order depending on your business logic
+if (!$active_order || $active_order['state'] != 'abandoned') {
+    // nothing to report here, as order doesn't seem abandoned
     return;
 }
 
@@ -31,18 +33,18 @@ $contact->setAddress1(Utils::get_first_non_empty_value(Utils::get_array_value($_
 $contact->setAddress2(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_address_2'), Utils::get_array_value($_POST, 'shipping_address_2')));
 $contact->setCompany(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_company'), Utils::get_array_value($_POST, 'shipping_company')));
 $contact->setCity(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_city'), Utils::get_array_value($_POST, 'shipping_city')));
-$contact->setCity(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_zip'), Utils::get_array_value($_POST, 'shipping_zip')));
+$contact->setPostalCode(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_zip'), Utils::get_array_value($_POST, 'shipping_zip')));
 $contact->setState(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_state'), Utils::get_array_value($_POST, 'shipping_state')));
 $contact->setCountry(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_country'), Utils::get_array_value($_POST, 'shipping_country')));
 
 $order = new Order();
-$order->setId(md5($session_order['id'])); // this is unique order id, md5/sha1 ... do not use primary id
-$order->setValue($session_order['value']); // total order value
-$order->setCurrency($session_order['currency']); // order currency
-$order->setIsCod($session_order['method'] == 'COD');
-$order->setCheckoutUrl(Utils::get_current_url() . "/3_restore_cart.php?order_id={$session_order['id']}");
+$order->setId($cartboss->getSession()->getToken());
+$order->setValue($active_order['value']); // total order value
+$order->setCurrency($active_order['currency']); // order currency
+$order->setIsCod($active_order['method'] == 'COD');
+$order->setCheckoutUrl(Utils::get_current_url() . "/3_restore_cart.php?order_id={$cartboss->getSession()->getToken()}");
 
-foreach ($session_order['cart_items'] as $obj) {
+foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();
     $cart_item->setName($obj['name']); // required for sms personalization
     $cart_item->setId($obj['id']); // product id

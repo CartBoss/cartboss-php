@@ -6,9 +6,9 @@ require_once __DIR__ . '/../cartboss-php.php';
 const API_KEY = 'GrpYQV3GGgUYMk4JIhJ2TPoC6GEHP7Tk6ApwiyGYtGdj76UnnfQiHYtzSqUM9kk4';
 const IP_ADDRESS = '127.0.0.1';
 
-// assume this is your visitor's order object/array/active-record
+// assume this is your visitor's order object/array/active-record, it depends on your business logic
 const CURRENT_ORDER = array(
-    'id' => 'foo',
+    'id' => '1',
     'value' => 40.0,
     'currency' => 'EUR',
     'state' => 'abandoned',
@@ -32,77 +32,36 @@ const CURRENT_ORDER = array(
     // ...
 );
 
-function template($file, $args)
-{
-    // ensure the file exists
-    if (!file_exists($file)) {
-        return '';
-    }
-
-    // Make values in the associative array easier to access by extracting them
-    if (is_array($args)) {
-        extract($args);
-    }
-
-    // buffer the output (including the file is "output")
-    ob_start();
-    include $file;
-    return ob_get_clean();
-}
-
 /*
- * CartBoss SDK offers three helper methods to parse and decode various information, injected into all SMS urls that point back to your website.
- *
- * It is recommended to run logic below, at each GET request.
+ * CartBoss SDK offers three helper methods to parse and decode various information, injected into all SMS urls that point to your website
  */
 
 $cartboss = new \CartBoss\Api\CartBoss(API_KEY);
 
-
 /*
- * Attribution token is automatically injected into all urls that point back to your website.
- * You will need to attach this token to PurchaseEvent later on in the flow AND remove it from session|cookie|order once the purchase event is successfully sent out.
- *
- * It is recommended to check for the token != null and store it to session|cookie|order.
- *
- * Use cases:
- * - a person receives SMS with a link to her abandoned cart, if order is later placed, you'll attach this token to Purchase event.
- * - a person receives SMS with a link to a specific product page, ...
- * - a person receives SMS with a link to store home page, ...
- *
+ * Attribution token is essential information that links CartBoss message to an actual Purchase
+ * Attribution token gets automatically injected into all SMS urls and should be used with Purchase event if available
  */
 
 if ($cartboss->getAttributionToken()) {
-    echo "ATTRIBUTION TOKEN: " . $cartboss->getAttributionToken() . PHP_EOL;
+    echo "INTERCEPTED ATTRIBUTION TOKEN: " . $cartboss->getAttributionToken() . PHP_EOL;
 
-    // store token until store/visitor order is initialized
-    $_SESSION['cb_attribution_token'] = $cartboss->getAttributionToken();
+    // once token is intercepted, store it to active order or browser cookie for later use (Purchase Event)
 
-    // store to database
+    // ... visitor places an order with your store
 
-    // or, store to cookie, expiration 7 days
-
-    // and, don't forget to clear attribution token from "session" once purchase event is sent
+    // create Purchase event and $event->setAttribution( ... stored attribution token ...)
 }
 
 /*
  * Contact is an object that holds information like: first_name, phone, etc.
- * Contact info is injected into all urls that point back to your website.
- * You can use this info to re-populate billing address, whenever person visits your store.
- * Keep in mind, Contact object is not intended to use for order restoration purposes.
- *
- * It is recommended to check for contact != null, and store it to session|cookie for later use.
- *
- * Use cases:
- * - a person receives SMS with a link to a specific product page
- * - a person receives SMS with a link to store home page
- *
- * When person places an item into her cart, you can use this info to fill out billing/shipping address fields and increase conversion rate.
+ * Contact info is injected into all urls that point to your website.
+ * You can use this info to re-populate billing address, whenever person visits your store through SMS
  */
 
 $contact = $cartboss->getContact();
 if ($contact) {
-    echo "CONTACT INFO" . PHP_EOL;
+    echo "INTERCEPTED CONTACT INFO" . PHP_EOL;
 
     echo $contact->getPhone() . PHP_EOL;
     echo $contact->getEmail() . PHP_EOL;
@@ -116,25 +75,13 @@ if ($contact) {
     echo $contact->getPostalCode() . PHP_EOL;
     echo $contact->getCountry() . PHP_EOL;
 
-    // example
-    $_SESSION['cb_contact'] = serialize($cartboss->getAttributionToken());
-
-    //store to cookie, expiration 1Y
+    // once contact info is intercepted, you can use it to pre-populate checkout fields
 }
 
 
 /*
  * Coupon is an object that holds information discount_code, discount_value, etc
  * Coupon/Discount info is injected into all urls that point back to your website, if SMS is set to offer a discount eg: "Hi, you got 20% off. Click here <url>"
- * You'll need to attach discount to an order, once order is created by your business logic.
- *
- * It is recommended to check for coupon != null, and store it to session|cookie|order for later use.
- *
- * Use cases:
- * - a person receives SMS with a link to her abandoned cart with 20% off
- * - a person receives SMS with a link to a specific product page with 15% off
- * - a person receives SMS with a link to store home page with 5% off
- *
  */
 
 $coupon = $cartboss->getCoupon();
@@ -148,7 +95,7 @@ if ($coupon) {
     echo $coupon->isFreeShipping() . PHP_EOL;
     echo $coupon->isPercentage() . PHP_EOL;
 
-    // 1. insert coupon to your DB
-    // 2. remove it after 7 days (cron)
-    // 3. attach it to visitor's order once initialized
+    // once coupon is intercepted, store it to your database and attach it to order once it's initialized (usually when first item is added to cart)
+
+    // also, you might want to prune coupons after 7 days with a crontab script
 }
