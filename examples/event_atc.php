@@ -42,7 +42,7 @@ $order->setId($cartboss->getSession()->getToken());
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
-$order->setCheckoutUrl(Utils::get_current_url() . "/3_restore_cart.php?order_id={$cartboss->getSession()->getToken()}");
+$order->setCheckoutUrl(Utils::getCurrentUrl() . "/3_restore_cart.php?order_id={$cartboss->getSession()->getToken()}");
 
 foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();

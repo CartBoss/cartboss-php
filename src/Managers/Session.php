@@ -32,7 +32,7 @@ class Session
         if (!self::isValidToken($token)) {
             $factory = new Factory;
             $generator = $factory->getGenerator(new Strength(Strength::MEDIUM));
-            $token = $generator->generateString(32, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            $token = $generator->generateString(64, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
         }
 
         $this->cookie->setValue($token);

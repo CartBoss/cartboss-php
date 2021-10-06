@@ -6,31 +6,17 @@ use Exception;
 
 class Utils
 {
-    public static function get_current_url()
+    public static function getCurrentUrl()
     {
         return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     }
 
-    public static function get_user_agent()
+    public static function getUserAgent()
     {
         return self::get_array_value($_SERVER, 'HTTP_USER_AGENT');
     }
 
-    public static function get_array_value($arr, $key, $default = null)
-    {
-        if (!is_array($arr)) {
-            return $default;
-        }
-        if (!array_key_exists($key, $arr)) {
-            return $default;
-        }
-        if (empty($arr[$key])) {
-            return $default;
-        }
-        return $arr[$key];
-    }
-
-    public static function get_visitor_ip()
+    public static function getIp()
     {
         foreach (
             array(
@@ -57,6 +43,20 @@ class Utils
         }
 
         return null;
+    }
+
+    public static function get_array_value($arr, $key, $default = null)
+    {
+        if (!is_array($arr)) {
+            return $default;
+        }
+        if (!array_key_exists($key, $arr)) {
+            return $default;
+        }
+        if (empty($arr[$key])) {
+            return $default;
+        }
+        return $arr[$key];
     }
 
     public static function get_first_non_empty_value()

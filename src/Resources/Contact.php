@@ -6,7 +6,7 @@ use CartBoss\Api\Interfaces\PayloadInterface;
 use CartBoss\Api\Resources\Addresses\BillingAddress;
 use CartBoss\Api\Utils;
 
-class Contact extends BillingAddress implements PayloadInterface
+class Contact extends BillingAddress
 {
     /**
      * @var string|null
@@ -23,8 +23,8 @@ class Contact extends BillingAddress implements PayloadInterface
 
     public function __construct()
     {
-        $this->ip_address = Utils::get_visitor_ip();
-        $this->user_agent = Utils::get_user_agent();
+        $this->ip_address = Utils::getIp();
+        $this->user_agent = Utils::getUserAgent();
     }
 
     public function getPayload(): array
@@ -76,4 +76,8 @@ class Contact extends BillingAddress implements PayloadInterface
         $this->accepts_marketing = $accepts_marketing;
     }
 
+    public function __toString()
+    {
+        return $this->getPhone();
+    }
 }

@@ -4,13 +4,7 @@ namespace CartBoss\Api;
 
 use CartBoss\Api\Exceptions\ApiException;
 use CartBoss\Api\Exceptions\ValidationException;
-use CartBoss\Api\Interceptors\AttributionInterceptor;
-use CartBoss\Api\Interceptors\ContactInterceptor;
-use CartBoss\Api\Interceptors\DiscountInterceptor;
 use CartBoss\Api\Managers\ApiClient;
-use CartBoss\Api\Managers\Session;
-use CartBoss\Api\Resources\Contact;
-use CartBoss\Api\Resources\Coupon;
 use CartBoss\Api\Resources\Events\BaseEvent;
 use CartBoss\Api\Resources\Events\OrderBaseEvent;
 use Rakit\Validation\Validator;
@@ -23,67 +17,16 @@ define('CARTBOSS_VERSION', '1.1.0');
 
 class CartBoss
 {
-    /**
-     * @var DiscountInterceptor
-     */
-    private $discount_interceptor;
-    /**
-     * @var ContactInterceptor
-     */
-    private $contact_interceptor;
-    /**
-     * @var AttributionInterceptor
-     */
-    private $attribution_interceptor;
+
     /**
      * @var ApiClient
      */
     private $api_client;
-    /**
-     * @var Session
-     */
-    private $session;
+
 
     public function __construct(string $api_key)
     {
         $this->api_client = new ApiClient($api_key);
-        $this->session = new Session();
-
-        $this->attribution_interceptor = new AttributionInterceptor();
-        $this->discount_interceptor = new DiscountInterceptor($api_key);
-        $this->contact_interceptor = new ContactInterceptor($api_key);
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAttributionToken(): ?string
-    {
-        return $this->attribution_interceptor->getToken();
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSession(): Session
-    {
-        return $this->session;
-    }
-
-    /**
-     * @return Coupon|null
-     */
-    public function getCoupon(): ?Coupon
-    {
-        return $this->discount_interceptor->getCoupon();
-    }
-
-    /**
-     * @return Contact|null
-     */
-    public function getContact(): ?Contact
-    {
-        return $this->contact_interceptor->getContact();
     }
 
     /**
