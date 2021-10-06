@@ -48,4 +48,9 @@ abstract class BaseUrlInterceptor
     {
         return $this->namespace ? static::COOKIE_NAME . '_' . $this->namespace : static::COOKIE_NAME;
     }
+
+    public function clear(): void
+    {
+        (new Cookie($this->getCookieName()))->deleteAndUnset();
+    }
 }
