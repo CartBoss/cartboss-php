@@ -5,8 +5,10 @@ namespace CartBoss\Api;
 use CartBoss\Api\Exceptions\ApiException;
 use CartBoss\Api\Exceptions\EventValidationException;
 use CartBoss\Api\Managers\ApiClient;
+use CartBoss\Api\Managers\Session;
 use CartBoss\Api\Resources\Events\BaseEvent;
 use CartBoss\Api\Resources\Events\OrderBaseEvent;
+use CartBoss\Api\Resources\Events\PurchaseEvent;
 use Rakit\Validation\Validator;
 use stdClass;
 
@@ -15,16 +17,44 @@ define('CARTBOSS_VERSION', '2.0.0');
 
 class CartBoss
 {
-
     /**
      * @var ApiClient
      */
     private $api_client;
+    /**
+     * @var string
+     */
+    private $api_key;
 
     public function __construct(string $api_key)
     {
+        $this->api_key = $api_key;
         $this->api_client = new ApiClient($api_key);
+//        $this->session = new Session();
     }
+
+    public function onAttributionTokenIntercepted($func)
+    {
+        $interceptor = new \CartBoss\Api\Interceptors\AttributionInterceptor();
+        if ($interceptor->getToken()->isValid()) {
+            $func($interceptor->getToken());
+        }
+    }
+    public function onCouponIntercepted($func)
+    {
+        $interceptor = new \CartBoss\Api\Interceptors\CouponInterceptor($this->api_key);
+        if ($interceptor->getCoupon()->isValid()) {
+            $func($interceptor->getCoupon());
+        }
+    }
+
+//    /**
+//     * @return Session
+//     */
+//    public function getSession(): Session
+//    {
+//        return $this->session;
+//    }
 
     /**
      * @param OrderBaseEvent $event

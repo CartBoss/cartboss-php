@@ -23,9 +23,9 @@ abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
      */
     private $contact;
 
-    public function __construct($event_name, $rules = array())
+    public function __construct($rules = array())
     {
-        parent::__construct($event_name, array_merge(array(
+        parent::__construct(array_merge(array(
             'contact' => 'required',
             'contact.ip_address' => 'required|ip',
             'contact.phone' => 'required|min:5',
@@ -50,6 +50,14 @@ abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
     public function setAttribution(?string $attribution): void
     {
         $this->attribution = $attribution;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAttribution(): ?string
+    {
+        return $this->attribution;
     }
 
     /**

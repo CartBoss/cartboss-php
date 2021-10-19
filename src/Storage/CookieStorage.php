@@ -7,10 +7,12 @@ use Delight\Cookie\Cookie;
 
 class CookieStorage implements StorageInterface
 {
+    const NAMESPACE = 'cbx_';
+
     public function set($name, $value, $max_age = 60 * 60 * 24)
     {
         if (isset($name, $value, $max_age)) {
-            $cookie = new Cookie($name);
+            $cookie = new Cookie(self::NAMESPACE . $name);
             $cookie->setValue($value);
             $cookie->setMaxAge($max_age);
             $cookie->setHttpOnly(true);
@@ -22,12 +24,12 @@ class CookieStorage implements StorageInterface
 
     public function get($name, $default = null)
     {
-        return Cookie::get($name, $default);
+        return Cookie::get(self::NAMESPACE .$name, $default);
     }
 
     public function delete($name)
     {
-        $cookie = new Cookie($name);
+        $cookie = new Cookie(self::NAMESPACE .$name);
         $cookie->deleteAndUnset();
     }
 }

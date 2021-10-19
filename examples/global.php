@@ -2,7 +2,6 @@
 
 
 use CartBoss\Api\Interceptors\ContactUrlInterceptor;
-use CartBoss\Api\Interceptors\CouponUrlInterceptor;
 
 require_once __DIR__ . '/../cartboss-php.php';
 
@@ -42,24 +41,48 @@ $my_order = array(
 
 $cartboss = new \CartBoss\Api\CartBoss(CB_API_KEY);
 
-$cartboss_session = new \CartBoss\Api\Managers\Session();
-echo "CARTBOSS SESSION TOKEN: " . $cartboss_session->getToken() . PHP_EOL;
+/*
+ * Attribution token is essential information that links CartBoss message to an actual Purchase
+ * Attribution token gets automatically injected into all SMS urls and should be used with Purchase event when available
+ */
+$cartboss->onAttributionTokenIntercepted(function (\CartBoss\Api\Resources\AttributionToken $attribution_token) {
+    // option 1: store it to session|cookie and assign to PurchaseEvent
+    // option 2: store it to order (DB)
+
+    var_dump($attribution_token);
+});
+
+/*
+ * Coupon is an object that holds: discount_code, discount_value, etc
+ * Coupon/Discount info is injected into all urls that point back to your website, if SMS is set to offer a discount eg: "Hi, you got 20% off. Click here <url>"
+ */
+$cartboss->onCouponIntercepted(function (\CartBoss\Api\Resources\Coupon $coupon) {
+    // option 1: insert it to DB + store coupon id|code to session|cookie
+    // option 2: insert it to DB + attach it to current order
+    // option 3: serialize, store to session|cookie, attach to order when created
+
+    var_dump($coupon);
+});
+
+
+//$cartboss_session = $cartboss->getSession();
+//echo "CARTBOSS SESSION TOKEN: " . $cartboss_session->getToken() . PHP_EOL;
 
 /*
  * Attribution token is essential information that links CartBoss message to an actual Purchase
  * Attribution token gets automatically injected into all SMS urls and should be used with Purchase event if available
  */
 
-$attribution_interceptor = new \CartBoss\Api\Interceptors\AttributionUrlInterceptor();
-if ($attribution_interceptor->getToken()) {
-    echo "INTERCEPTED ATTRIBUTION TOKEN: " . $attribution_interceptor->getToken() . PHP_EOL;
-
-    // once token is intercepted, store it to active order or browser cookie for later use (Purchase Event)
-
-    // ... visitor places an order with your store
-
-    // create Purchase event and $event->setAttribution( ... stored attribution token ...)
-}
+//$attribution_interceptor = new \CartBoss\Api\Interceptors\AttributionUrlInterceptor();
+//if ($attribution_interceptor->getToken()) {
+//    echo "INTERCEPTED ATTRIBUTION TOKEN: " . $attribution_interceptor->getToken() . PHP_EOL;
+//
+//    // once token is intercepted, store it to active order or browser cookie for later use (Purchase Event)
+//
+//    // ... visitor places an order with your store
+//
+//    // create Purchase event and $event->setAttribution( ... stored attribution token ...)
+//}
 
 /*
  * Contact is an object that holds information like: first_name, phone, etc.
@@ -93,19 +116,19 @@ if ($contact) {
  * Coupon/Discount info is injected into all urls that point back to your website, if SMS is set to offer a discount eg: "Hi, you got 20% off. Click here <url>"
  */
 
-$coupon_interceptor = new CouponUrlInterceptor(CB_API_KEY, $attribution_interceptor->getToken());
-$coupon = $coupon_interceptor->getCoupon();
-if ($coupon) {
-    echo "COUPON" . PHP_EOL;
-
-    echo $coupon->getCode() . PHP_EOL;
-    echo $coupon->getType() . PHP_EOL;
-    echo $coupon->getValue() . PHP_EOL;
-    echo $coupon->isFixedAmount() . PHP_EOL;
-    echo $coupon->isFreeShipping() . PHP_EOL;
-    echo $coupon->isPercentage() . PHP_EOL;
-
-    // once coupon is intercepted, store it to your database and attach it to order once it's initialized (usually when first item is added to cart)
-
-    // also, you might want to prune coupons after 7 days with a crontab script
-}
+//$coupon_interceptor = new CouponUrlInterceptor(CB_API_KEY, $attribution_interceptor->getToken());
+//$coupon = $coupon_interceptor->getCoupon();
+//if ($coupon) {
+//    echo "COUPON" . PHP_EOL;
+//
+//    echo $coupon->getCode() . PHP_EOL;
+//    echo $coupon->getType() . PHP_EOL;
+//    echo $coupon->getValue() . PHP_EOL;
+//    echo $coupon->isFixedAmount() . PHP_EOL;
+//    echo $coupon->isFreeShipping() . PHP_EOL;
+//    echo $coupon->isPercentage() . PHP_EOL;
+//
+//    // once coupon is intercepted, store it to your database and attach it to order once it's initialized (usually when first item is added to cart)
+//
+//    // also, you might want to prune coupons after 7 days with a crontab script
+//}

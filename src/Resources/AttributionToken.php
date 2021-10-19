@@ -6,7 +6,7 @@ class AttributionToken
 {
     protected $token;
 
-    public function __construct($token)
+    public function __construct(string $token)
     {
         $this->token = trim($token);
     }

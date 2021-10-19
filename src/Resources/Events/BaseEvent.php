@@ -6,7 +6,8 @@ use CartBoss\Api\Interfaces\PayloadInterface;
 
 abstract class BaseEvent implements PayloadInterface
 {
-    private $event_name;
+    const EVENT_NAME = null;
+
     private $timestamp;
     private $rules = array(
         'event' => 'required',
@@ -14,9 +15,8 @@ abstract class BaseEvent implements PayloadInterface
         'timestamp' => 'required|integer',
     );
 
-    public function __construct($event_name, $rules = array())
+    public function __construct($rules = array())
     {
-        $this->event_name = trim($event_name);
         $this->timestamp = time();
         $this->rules = array_merge($this->rules, $rules);
     }
@@ -25,14 +25,14 @@ abstract class BaseEvent implements PayloadInterface
     {
         return array(
             'platform' => 'API',
-            'event' => $this->event_name,
+            'event' => static::EVENT_NAME,
             'timestamp' => $this->timestamp,
         );
     }
 
     public function getEventName(): string
     {
-        return $this->event_name;
+        return static::EVENT_NAME;
     }
 
     public function setTimestamp($value)

@@ -20,12 +20,6 @@ if (!$active_order || $active_order['state'] != 'abandoned') {
     return;
 }
 
-$cartboss_session = new \CartBoss\Api\Managers\Session();
-if (!$cartboss_session->hasValidSessionToken()){
-    // if somehow session token is not set at this point, exit
-    return;
-}
-
 // create ATC event
 $event = new AddToCartEvent();
 
@@ -50,11 +44,11 @@ $event->setContact($contact);
 
 // order section
 $order = new Order();
-$order->setId($cartboss_session->getToken());
+$order->setId($active_order['cb_order_token']);
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
-$order->setCheckoutUrl(Utils::getCurrentUrl() . "/3_restore_cart.php?order_id={$cartboss_session->getToken()}");
+$order->setCheckoutUrl(Utils::getCurrentUrl() . "/3_restore_cart.php?order_id={$active_order['cb_order_token']}");
 
 foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();

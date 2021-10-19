@@ -68,5 +68,4 @@ class Session
     {
         return !is_null($token) && 1 === preg_match("/^[a-zA-Z0-9]+$/i", $token);
     }
-
 }
