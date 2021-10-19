@@ -4,12 +4,10 @@ namespace CartBoss\Api\Managers;
 
 use CartBoss\Api\Utils;
 use Delight\Cookie\Cookie;
-use RandomLib\Factory;
-use SecurityLib\Strength;
 
 class Session
 {
-    const COOKIE_NAME = "cartboss_session";
+    const COOKIE_NAME = "cbx_session";
     const QUERY_VAR = "cb_session_token";
 
     /**
@@ -30,13 +28,15 @@ class Session
         }
 
         if (!self::isValidToken($token)) {
-            $factory = new Factory;
-            $generator = $factory->getGenerator(new Strength(Strength::MEDIUM));
-            $token = $generator->generateString(64, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            $token = Utils::get_random_string(64);
         }
 
-        $this->cookie->setValue($token);
-        $this->cookie->saveAndSet();
+        if (self::isValidToken($token)) {
+            $this->cookie->setValue($token);
+            $this->cookie->saveAndSet();
+        } else {
+            $this->reset();
+        }
     }
 
     /**
@@ -45,6 +45,14 @@ class Session
     public function getToken(): ?string
     {
         return $this->cookie->get(self::COOKIE_NAME, null);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasValidSessionToken(): bool
+    {
+        return self::isValidToken($this->getToken());
     }
 
     public function reset()

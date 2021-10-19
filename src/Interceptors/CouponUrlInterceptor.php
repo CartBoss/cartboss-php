@@ -9,7 +9,7 @@ use CartBoss\Api\Utils;
 class CouponUrlInterceptor extends BaseUrlInterceptor
 {
     const QUERY_VAR = "cb__discount";
-    const COOKIE_NAME = "cb_discount";
+    const COOKIE_NAME = "cbx_discount";
     const COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 
     const STRUCT_KEY_CODE = 'code';

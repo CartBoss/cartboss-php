@@ -1,8 +1,9 @@
 (function ($) {
-    var debug = true,
-        endpointUrl = 'event_atc.php';
+    var cbDebug = true, // disable in production
+        cbATCEventHandlerUrl = 'event_atc.php'; // path to script that generates add to cart event
 
-    var inputz = {
+    // replace selectors with your own
+    var cbInputFields = {
         billing_phone: '#billing_phone',
         billing_email: '#billing_email',
         billing_first_name: '#billing_first_name',
@@ -28,13 +29,16 @@
         accepts_marketing: '#accepts_marketing'
     }
 
+    ////
+    // don't edit beyond this line
+    ////
     var cbDataSender = (function () {
         return {
             stateData: null,
 
             addState: function (data) {
                 if (!data) {
-                    debug && console.log("CartBoss", "State data is empty, skipping");
+                    cbDebug && console.log("CartBoss", "State data is empty, skipping");
                     return;
                 }
 
@@ -46,7 +50,7 @@
 
             onEdit: function () {
                 clearTimeout(this.tid);
-                debug && console.log("CartBoss", "🛑 Edit detected");
+                cbDebug && console.log("CartBoss", "🛑 Edit detected");
 
                 if (this.stateData) {
                     this._send(1500);
@@ -57,15 +61,15 @@
                 var self = this;
 
                 if (!this.stateData) {
-                    debug && console.log("CartBoss", "🚨 Nothing to send");
+                    cbDebug && console.log("CartBoss", "🚨 Nothing to send");
                 }
 
                 if (!self.isSendingInProgress) {
-                    debug && console.log("CartBoss", "⏳ Sending scheduled in", delay, "ms");
+                    cbDebug && console.log("CartBoss", "⏳ Sending scheduled in", delay, "ms");
 
                     self.tid = setTimeout(function () {
                         $.ajax({
-                            url: endpointUrl,
+                            url: cbATCEventHandlerUrl,
                             type: "POST",
                             data: self.stateData,
                             cache: false,
@@ -75,15 +79,15 @@
                             beforeSend: function (xhr) {
                                 self.isSendingInProgress = true;
                                 self.stateData = null;
-                                debug && console.log("CartBoss", "✈️ Sending started with data");
+                                cbDebug && console.log("CartBoss", "✈️ Sending started with data");
                             },
                             complete: function (a, b) {
                                 self.isSendingInProgress = false;
-                                debug && console.log("CartBoss", "✅ Sending completed with response:", b);
+                                cbDebug && console.log("CartBoss", "✅ Sending completed with response:", b);
 
 
                                 if (self.stateData) {
-                                    debug && console.log("CartBoss", "🙊 State changed while previous sending, send again...");
+                                    cbDebug && console.log("CartBoss", "🙊 State changed while previous sending, send again...");
                                     self._send(0);
                                 }
                             },
@@ -94,10 +98,10 @@
         };
     })();
 
-    var foo = {};
-    var sendCartBossData = function () {
+    var cbElements = {};
+    var cbListener = function () {
         var data = {};
-        $.each(foo, function (name, el) {
+        $.each(cbElements, function (name, el) {
             if (el.is(':checkbox')) {
                 data[name] = !!el.is(':checked');
             } else {
@@ -109,9 +113,9 @@
 
 
     $(document).ready(function () {
-        debug && console.log("CartBoss", "Script initialized");
+        cbDebug && console.log("CartBoss", "Script initialized");
 
-        $.each(inputz, function (name, selector) {
+        $.each(cbInputFields, function (name, selector) {
             var el = $(selector);
 
             if (el && el.length > 0) {
@@ -119,13 +123,13 @@
                     cbDataSender.onEdit();
                 });
 
-                el.change(sendCartBossData);
+                el.change(cbListener);
 
-                foo[name] = el;
+                cbElements[name] = el;
 
-                debug && console.log("CartBoss", "Field listener attached to field", name);
+                cbDebug && console.log("CartBoss", "Field listener attached to field", name);
             } else {
-                debug && console.log("CartBoss", "Field not found", name);
+                cbDebug && console.log("CartBoss", "Field not found", name);
             }
         });
     });

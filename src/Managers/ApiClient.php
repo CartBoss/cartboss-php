@@ -17,7 +17,7 @@ class ApiClient
     /**
      * Version of our client.
      */
-    const CLIENT_VERSION = "1.0.0";
+    const CLIENT_VERSION = "2.0.0";
 
     /**
      * Endpoint of the remote API.

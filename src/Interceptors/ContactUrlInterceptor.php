@@ -8,7 +8,7 @@ use CartBoss\Api\Utils;
 class ContactUrlInterceptor extends BaseUrlInterceptor
 {
     const QUERY_VAR = "cb__contact";
-    const COOKIE_NAME = "cb_contact";
+    const COOKIE_NAME = "cbx_contact";
     const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
     const STRUCT_KEY_EMAIL = 'em';

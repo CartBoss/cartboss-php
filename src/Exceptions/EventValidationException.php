@@ -4,6 +4,6 @@ namespace CartBoss\Api\Exceptions;
 
 use Exception;
 
-class ValidationException extends Exception
+class EventValidationException extends Exception
 {
 }

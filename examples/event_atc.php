@@ -2,7 +2,7 @@
 
 use CartBoss\Api\CartBoss;
 use CartBoss\Api\Exceptions\ApiException;
-use CartBoss\Api\Exceptions\ValidationException;
+use CartBoss\Api\Exceptions\EventValidationException;
 use CartBoss\Api\Resources\CartItem;
 use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Resources\Events\AddToCartEvent;
@@ -10,9 +10,9 @@ use CartBoss\Api\Resources\Order;
 use CartBoss\Api\Utils;
 
 require_once __DIR__ . '/global.php';
-global $cartboss;
+global $cartboss, $my_order;
 
-$active_order = CURRENT_ORDER;
+$active_order = $my_order;
 
 // test order depending on your business logic
 if (!$active_order || $active_order['state'] != 'abandoned') {
@@ -20,7 +20,16 @@ if (!$active_order || $active_order['state'] != 'abandoned') {
     return;
 }
 
+$cartboss_session = new \CartBoss\Api\Managers\Session();
+if (!$cartboss_session->hasValidSessionToken()){
+    // if somehow session token is not set at this point, exit
+    return;
+}
 
+// create ATC event
+$event = new AddToCartEvent();
+
+// contact section
 $contact = new Contact();
 $contact->setPhone(Utils::get_array_value($_POST, 'billing_phone'));
 $contact->setEmail(Utils::get_array_value($_POST, 'billing_email'));
@@ -37,12 +46,15 @@ $contact->setPostalCode(Utils::get_first_non_empty_value(Utils::get_array_value(
 $contact->setState(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_state'), Utils::get_array_value($_POST, 'shipping_state')));
 $contact->setCountry(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_country'), Utils::get_array_value($_POST, 'shipping_country')));
 
+$event->setContact($contact);
+
+// order section
 $order = new Order();
-$order->setId($cartboss->getSession()->getToken());
+$order->setId($cartboss_session->getToken());
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
-$order->setCheckoutUrl(Utils::getCurrentUrl() . "/3_restore_cart.php?order_id={$cartboss->getSession()->getToken()}");
+$order->setCheckoutUrl(Utils::getCurrentUrl() . "/3_restore_cart.php?order_id={$cartboss_session->getToken()}");
 
 foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();
@@ -55,35 +67,22 @@ foreach ($active_order['cart_items'] as $obj) {
     $order->addCartItem($cart_item);
 }
 
-// create ATC event
-$event = new AddToCartEvent();
-
-// attach contact
-$event->setContact($contact);
-
-// attach order
 $event->setOrder($order);
 
-// debug
-var_dump($event->getPayload());
-
 try {
-    $cartboss = new CartBoss(API_KEY);
-
-    // send to CartBoss, if invalid or request fails, exception is thrown
+    // send event to CartBoss API
     $cartboss->sendOrderEvent($event);
 
     echo "event {$event->getEventName()} successfully sent";
 
-} catch (ValidationException $e) {
+    // debug
+    var_dump($event->getPayload());
 
-    // simply discard this event when validation error occurs
+} catch (EventValidationException $e) {
     echo "<h1>Event validation failed</h1>";
     var_dump($e->getMessage());
 
 } catch (ApiException $e) {
-
-    // you might want to implement some kind of retry mechanism
     echo "<h1>Api failed</h1>";
     var_dump($e->getMessage());
 }

@@ -6,15 +6,16 @@ use CartBoss\Api\Interceptors\CouponUrlInterceptor;
 
 require_once __DIR__ . '/../cartboss-php.php';
 
-const API_KEY = 'GrpYQV3GGgUYMk4JIhJ2TPoC6GEHP7Tk6ApwiyGYtGdj76UnnfQiHYtzSqUM9kk4';
+const CB_API_KEY = 'GrpYQV3GGgUYMk4JIhJ2TPoC6GEHP7Tk6ApwiyGYtGdj76UnnfQiHYtzSqUM9kk4';
 const IP_ADDRESS = '127.0.0.1';
 
 // assume this is your visitor's order object/array/active-record, it depends on your business logic
 $my_order = array(
-    'internal_id' => '...',
+    'internal_id' => '...', // Database id (primary key for example)
     'value' => 40.0,
     'currency' => 'EUR',
     'state' => 'abandoned',
+    'number' => '#12345',
     'method' => 'COD',
     'cart_items' => array(
         array(
@@ -39,10 +40,10 @@ $my_order = array(
  * CartBoss SDK offers three helper methods to parse and decode various information, injected into all SMS urls that point to your website
  */
 
-$cartboss = new \CartBoss\Api\CartBoss(API_KEY);
+$cartboss = new \CartBoss\Api\CartBoss(CB_API_KEY);
 
-
-//echo "CARTBOSS SESSION TOKEN: " . $cartboss->getSession()->getToken() . PHP_EOL;
+$cartboss_session = new \CartBoss\Api\Managers\Session();
+echo "CARTBOSS SESSION TOKEN: " . $cartboss_session->getToken() . PHP_EOL;
 
 /*
  * Attribution token is essential information that links CartBoss message to an actual Purchase
@@ -66,7 +67,7 @@ if ($attribution_interceptor->getToken()) {
  * You can use this info to re-populate billing address, whenever person visits your store through SMS
  */
 
-$contact_interceptor = new ContactUrlInterceptor(API_KEY);
+$contact_interceptor = new ContactUrlInterceptor(CB_API_KEY);
 $contact = $contact_interceptor->getContact();
 if ($contact) {
     echo "INTERCEPTED CONTACT INFO" . PHP_EOL;
@@ -92,7 +93,7 @@ if ($contact) {
  * Coupon/Discount info is injected into all urls that point back to your website, if SMS is set to offer a discount eg: "Hi, you got 20% off. Click here <url>"
  */
 
-$coupon_interceptor = new CouponUrlInterceptor(API_KEY, $attribution_interceptor->getToken());
+$coupon_interceptor = new CouponUrlInterceptor(CB_API_KEY, $attribution_interceptor->getToken());
 $coupon = $coupon_interceptor->getCoupon();
 if ($coupon) {
     echo "COUPON" . PHP_EOL;

@@ -7,6 +7,7 @@ class Coupon
     const TYPE_FIXED_AMOUNT = 'FIXED_AMOUNT';
     const TYPE_PERCENTAGE = 'PERCENTAGE';
     const TYPE_FREE_SHIPPING = 'FREE_SHIPPING';
+    const TYPE_CUSTOM = 'CUSTOM';
 
     /**
      * @var string|null
@@ -75,6 +76,14 @@ class Coupon
     public function isFixedAmount(): bool
     {
         return $this->type == self::TYPE_FIXED_AMOUNT;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCustom(): bool
+    {
+        return $this->type == self::TYPE_CUSTOM;
     }
 
     /**

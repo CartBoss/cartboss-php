@@ -3,7 +3,7 @@
 namespace CartBoss\Api;
 
 use CartBoss\Api\Exceptions\ApiException;
-use CartBoss\Api\Exceptions\ValidationException;
+use CartBoss\Api\Exceptions\EventValidationException;
 use CartBoss\Api\Managers\ApiClient;
 use CartBoss\Api\Resources\Events\BaseEvent;
 use CartBoss\Api\Resources\Events\OrderBaseEvent;
@@ -11,9 +11,7 @@ use Rakit\Validation\Validator;
 use stdClass;
 
 define('CARTBOSS_PATH', dirname(__FILE__));
-define('CARTBOSS_VERSION', '1.1.0');
-
-//require 'vendor/autoload.php';
+define('CARTBOSS_VERSION', '2.0.0');
 
 class CartBoss
 {
@@ -22,7 +20,6 @@ class CartBoss
      * @var ApiClient
      */
     private $api_client;
-
 
     public function __construct(string $api_key)
     {
@@ -33,7 +30,7 @@ class CartBoss
      * @param OrderBaseEvent $event
      * @return stdClass|null
      * @throws ApiException
-     * @throws ValidationException
+     * @throws EventValidationException
      */
     public function sendOrderEvent(OrderBaseEvent $event): ?stdClass
     {
@@ -43,7 +40,7 @@ class CartBoss
     /**
      * @param BaseEvent $event
      * @return stdClass|null
-     * @throws ValidationException
+     * @throws EventValidationException
      * @throws ApiException
      */
     public function sendEvent(BaseEvent $event): ?stdClass
@@ -55,7 +52,7 @@ class CartBoss
 
         // simply throw exception with error messages
         if ($validation->fails()) {
-            throw new ValidationException(print_r($validation->errors()->all(), true));
+            throw new EventValidationException(print_r($validation->errors()->all(), true));
         }
 
         // send it to CartBoss

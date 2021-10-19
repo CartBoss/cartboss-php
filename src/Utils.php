@@ -3,6 +3,7 @@
 namespace CartBoss\Api;
 
 use Exception;
+use Throwable;
 
 class Utils
 {
@@ -98,13 +99,26 @@ class Utils
             $secret = mb_substr($secret, 0, 32);
             $encrypted = openssl_encrypt($input, 'aes-256-cbc', $secret, 0, $iv);
             return array(
-                'iv'=>$iv,
-                'chipher'=>$encrypted
-                );
+                'iv' => $iv,
+                'chipher' => $encrypted
+            );
 
 //            return json_decode($decrypted, true);
         } catch (Exception $e) {
             return null;
+        }
+    }
+
+    public static function get_random_string($length = 32): ?string
+    {
+        try {
+            return bin2hex(random_bytes($length / 2));
+        } catch (Throwable $e) {
+            try {
+                return bin2hex(openssl_random_pseudo_bytes($length / 2));
+            } catch (Throwable $e) {
+                return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
+            }
         }
     }
 }

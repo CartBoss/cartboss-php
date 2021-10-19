@@ -9,10 +9,9 @@
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-openssl": "*",
-    "composer/ca-bundle": "^1.1",
+    "composer/ca-bundle": "^1.2",
     "delight-im/cookie": "^3.4",
-    "guzzlehttp/guzzle": "^7.3",
-    "ircmaxell/random-lib": "^1.2",
+    "guzzlehttp/guzzle": "^7.4",
     "rakit/validation": "^1.4"
   },
   "config": {
