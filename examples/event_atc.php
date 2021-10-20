@@ -54,7 +54,7 @@ $order->setIsCod($active_order['method'] == 'COD');
  *
  * example: https://domain/cartboss/restore-cart.php?order_hash=sha1($order_id)
  */
-$order->setCheckoutUrl("/cart_restore.php?order_id=" . sha1($active_order['internal_id']));
+$order->setCheckoutUrl(Utils::getCurrentHost() . "/cart_restore.php?order_hash=" . sha1($active_order['internal_id']));
 
 foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();
@@ -68,9 +68,6 @@ foreach ($active_order['cart_items'] as $obj) {
 }
 
 $event->setOrder($order);
-
-// debug
-var_dump($event->getPayload());
 
 try {
     $cartboss->sendOrderEvent($event);

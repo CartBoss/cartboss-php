@@ -14,7 +14,7 @@ global $my_order;
  */
 
 // assuming you set order_id=123 to checkout_url when sending ATC event
-$order_id = Utils::get_array_value($_GET, 'order_id');
+$order_id = Utils::get_array_value($_GET, 'order_hash');
 
 // no id?
 if (empty($order_id)) {
@@ -39,5 +39,6 @@ if ($order['state'] != 'abandoned') {
 $_SESSION['order_id'] = $order['id'];
 
 // redirect to checkout
-return "to checkout";
+header('Location: /index.php');
+die();
 

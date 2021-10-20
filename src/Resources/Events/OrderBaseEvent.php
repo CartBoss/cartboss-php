@@ -36,7 +36,6 @@ abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
             'order.currency' => 'required',
             'order.value' => 'required|numeric',
             'order.is_cod' => 'boolean',
-            'order.checkout_url' => 'required|url',
 
             'order.items' => 'required|array|min:1',
             'order.items.*.name' => 'required',

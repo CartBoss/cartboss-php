@@ -12,7 +12,7 @@
 <div class="container py-2">
     <h1>Checkout sample</h1>
 
-    <form>
+    <form method="post" action="event_purchase.php">
         <div class="mb-1">
             <label for="billing_phone" class="form-label">Phone number *</label>
             <input autocomplete="off" class="required form-control" id="billing_phone" name="billing_phone" required="required" type="tel" value="">
@@ -67,12 +67,15 @@
 
         <div class="mb-1">
             <label for="billing_country" class="form-label">Country</label>
-            <select class="form-select" id="billing_country">
+            <select class="form-select" id="billing_country" name="billing_country">
                 <option value="SI" selected>Slovenia</option>
                 <option value="DE">Germany</option>
             </select>
         </div>
 
+        <div class="mb-1 mt-3">
+            <button type="submit" class="btn btn-lg btn-primary">Place order &rarr;</button>
+        </div>
     </form>
 </div>
 </body>

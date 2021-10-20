@@ -3,7 +3,8 @@
 
 require_once __DIR__ . '/../cartboss-php.php';
 
-const CB_API_KEY = 'GrpYQV3GGgUYMk4JIhJ2TPoC6GEHP7Tk6ApwiyGYtGdj76UnnfQiHYtzSqUM9kk4';
+//const CB_API_KEY = 'GrpYQV3GGgUYMk4JIhJ2TPoC6GEHP7Tk6ApwiyGYtGdj76UnnfQiHYtzSqUM9kk4';
+const CB_API_KEY = 'wr6p8q6Oqfe39ZzR07QJnqVkzFDNCKwxHH2gw1KskmQiG7pOj69V9XHzf61VQ3N2';
 const IP_ADDRESS = '127.0.0.1';
 
 const ATTRIBUTION_TOKEN = 'attribution_token';
@@ -35,7 +36,7 @@ $my_order = array(
     // ...
 );
 
-$cartboss = new \CartBoss\Api\CartBoss(CB_API_KEY);
+$cartboss = new \CartBoss\Api\CartBoss(CB_API_KEY, true);
 
 /*
  * Attribution token is essential information that links CartBoss message to an actual Purchase
@@ -51,7 +52,7 @@ $cartboss->onAttributionIntercepted(function (\CartBoss\Api\Resources\Attributio
     // you can use CB utility cookie storage and use it later when applicable
     \CartBoss\Api\Storage\CookieStorage::set(ATTRIBUTION_TOKEN, $attribution->getToken(), 60 * 60 * 24 * 7);
 
-    // you can store add it to your order
+    // you can add it to your order
     global $order;
     $order['cb_attribution_token'] = $attribution->getToken();
 });
@@ -87,16 +88,8 @@ $cartboss->onContactIntercepted(function (\CartBoss\Api\Resources\Contact $conta
 
     // -- store to cookie --
     // you can use CB utility encryption class to encode array with a secret
-    // $encoded_contact_data = \CartBoss\Api\Encryption::encode(CB_API_KEY, $contact->getPayload());
+    $encoded_contact_data = \CartBoss\Api\Encryption::encode(CB_API_KEY, $contact->getPayload());
 
     // use CB utility cookie storage class to store encrypted data for later use [eg checkout page]
-    // \CartBoss\Api\Storage\CookieStorage::set('contact', $encoded_contact_data, 60 * 60 * 24 * 365);
-
-    // -- get from cookie --
-    // at checkout page; retrieve encoded contact data
-    // $cookie_data = \CartBoss\Api\Storage\CookieStorage::get('contact');
-
-    // decode it to array
-    // $decoded_contact_data = \CartBoss\Api\Encryption::decode(CB_API_KEY, $cookie_data);
-    // var_dump($decoded_contact_data);
+    \CartBoss\Api\Storage\CookieStorage::set('contact', $encoded_contact_data, 60 * 60 * 24 * 365);
 });

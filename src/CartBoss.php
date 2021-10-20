@@ -11,6 +11,7 @@ use CartBoss\Api\Managers\ApiClient;
 use CartBoss\Api\Managers\Session;
 use CartBoss\Api\Resources\Events\BaseEvent;
 use CartBoss\Api\Resources\Events\OrderBaseEvent;
+use CartBoss\Api\Resources\Events\PurchaseEvent;
 use Rakit\Validation\Validator;
 use stdClass;
 
@@ -23,6 +24,7 @@ class CartBoss
      * @var string
      */
     private $api_key;
+    private $debug;
     private $timeout = null;
     private $connect_timeout = null;
 
@@ -31,9 +33,10 @@ class CartBoss
      */
     private $session;
 
-    public function __construct(string $api_key)
+    public function __construct(string $api_key, bool $debug = false)
     {
         $this->api_key = $api_key;
+        $this->debug = $debug;
         $this->session = new Session();
     }
 
@@ -89,7 +92,11 @@ class CartBoss
         }
 
         $response = $this->sendEvent($event);
-        $this->session->reset();
+
+        if ($event->getEventName() == PurchaseEvent::EVENT_NAME) {
+            $this->session->reset();
+        }
+
         return $response;
     }
 
@@ -108,6 +115,11 @@ class CartBoss
 
         // throw exception with error messages
         if ($validation->fails()) {
+            if ($this->debug) {
+                error_log(print_r($validation->errors()->all(), true));
+                error_log(print_r($event->getPayload(), true));
+            }
+
             throw new EventValidationException(print_r($validation->errors()->all(), true));
         }
 

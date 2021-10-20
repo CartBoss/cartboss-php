@@ -228,11 +228,13 @@ class Order
      */
     public function getCheckoutUrl(): ?string
     {
-        $checkout_url = Uri::createFromString($this->checkout_url);
-
-        $checkout_url = UriModifier::appendQuery($checkout_url, Session::QUERY_VAR . '=' . $this->getId());
-
-        return $checkout_url->jsonSerialize();;
+        if (!empty($this->checkout_url)) {
+            $checkout_url = Uri::createFromString($this->checkout_url);
+            $checkout_url = UriModifier::appendQuery($checkout_url, Session::QUERY_VAR . '=' . $this->getId());
+            return $checkout_url->jsonSerialize();
+        }else {
+            return null;
+        }
     }
 
     /**
