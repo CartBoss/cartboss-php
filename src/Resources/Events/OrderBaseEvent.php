@@ -11,7 +11,7 @@ abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
     /**
      * @var string|null
      */
-    private $attribution = null;
+    private $attribution_token = null;
 
     /**
      * @var Order|null
@@ -45,19 +45,19 @@ abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
     }
 
     /**
-     * @param string|null $attribution
+     * @param string|null $attribution_token
      */
-    public function setAttribution(?string $attribution): void
+    public function setAttributionToken(?string $attribution_token): void
     {
-        $this->attribution = $attribution;
+        $this->attribution_token = $attribution_token;
     }
 
     /**
      * @return string|null
      */
-    public function getAttribution(): ?string
+    public function getAttributionToken(): ?string
     {
-        return $this->attribution;
+        return $this->attribution_token;
     }
 
     /**
@@ -83,7 +83,7 @@ abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
     {
         $data = parent::getPayload();
 
-        $data['attribution'] = $this->attribution;
+        $data['attribution'] = $this->attribution_token;
 
         if ($this->contact) {
             $data = array_merge($data, array(

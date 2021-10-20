@@ -27,17 +27,18 @@ if (!$cartboss_session->hasValidSessionToken()) {
 // create ATC event
 $event = new \CartBoss\Api\Resources\Events\PurchaseEvent();
 
-$attribution_interceptor = new \CartBoss\Api\Interceptors\AttributionUrlInterceptor();
-if ($attribution_interceptor->getToken()) {
-    $event->setAttribution($attribution_interceptor->getToken());
-}
+// attach attribution token (if available for this order)
+$attribution_token = null;
+// $attribution_token = \CartBoss\Api\Storage\CookieStorage::get(ATTRIBUTION_TOKEN, null);
+// $attribution_token = SELECT cb_attribution_token FROM orders WHERE order_id = $_SESSION['order_id']
+$event->setAttributionToken($attribution_token);
 
 // contact section
 $contact = new Contact();
 $contact->setPhone(Utils::get_array_value($_POST, 'billing_phone'));
 $contact->setEmail(Utils::get_array_value($_POST, 'billing_email'));
 $contact->setAcceptsMarketing(Utils::get_array_value($_POST, 'accepts_marketing', false));
-$contact->setIpAddress(IP_ADDRESS); // you can skip this setter for auto IP detection
+//$contact->setIpAddress(IP_ADDRESS); // you can skip this setter for auto IP detection
 
 $contact->setFirstName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_first_name'), Utils::get_array_value($_POST, 'shipping_first_name')));
 $contact->setLastName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_last_name'), Utils::get_array_value($_POST, 'shipping_last_name')));

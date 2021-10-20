@@ -6,6 +6,8 @@ require_once __DIR__ . '/../cartboss-php.php';
 const CB_API_KEY = 'GrpYQV3GGgUYMk4JIhJ2TPoC6GEHP7Tk6ApwiyGYtGdj76UnnfQiHYtzSqUM9kk4';
 const IP_ADDRESS = '127.0.0.1';
 
+const ATTRIBUTION_TOKEN = 'attribution_token';
+
 // assume this is your visitor's order object/array/active-record, it depends on your business logic
 $my_order = array(
     'internal_id' => '...', // Database id (primary key for example)
@@ -47,7 +49,7 @@ $cartboss->onAttributionIntercepted(function (\CartBoss\Api\Resources\Attributio
     var_dump($attribution->getToken());
 
     // you can use CB utility cookie storage and use it later when applicable
-    \CartBoss\Api\Storage\CookieStorage::set('attribution_token', $attribution->getToken(), 60 * 60 * 24 * 7);
+    \CartBoss\Api\Storage\CookieStorage::set(ATTRIBUTION_TOKEN, $attribution->getToken(), 60 * 60 * 24 * 7);
 });
 
 /*
