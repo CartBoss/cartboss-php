@@ -5,7 +5,7 @@ namespace CartBoss\Api\Interceptors;
 use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Utils;
 
-class ContactInterceptor
+class ContactInterceptor extends BaseInterceptor
 {
     const QUERY_VAR = "cb__contact";
 
@@ -21,8 +21,6 @@ class ContactInterceptor
     const STRUCT_KEY_CITY = 'ct';
     const STRUCT_KEY_COUNTRY = 'cn';
 
-    private $secret_key;
-
     /**
      * @var Contact
      */
@@ -30,12 +28,13 @@ class ContactInterceptor
 
     public function __construct(string $api_key)
     {
-        $this->secret_key = $api_key;
+        parent::__construct($api_key);
+
         $this->contact = new Contact();
 
         $query_val = Utils::get_array_value($_GET, static::QUERY_VAR, null);
         if (isset($query_val)) {
-            $decoded_data = Utils::aes_decode($this->secret_key, $query_val);
+            $decoded_data = $this->decode($query_val);
             if (is_array($decoded_data)) {
                 $this->contact->setPhone(Utils::get_array_value($decoded_data, self::STRUCT_KEY_PHONE));
                 $this->contact->setEmail(Utils::get_array_value($decoded_data, self::STRUCT_KEY_EMAIL));

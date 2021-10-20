@@ -5,10 +5,8 @@ namespace CartBoss\Api;
 use CartBoss\Api\Exceptions\ApiException;
 use CartBoss\Api\Exceptions\EventValidationException;
 use CartBoss\Api\Managers\ApiClient;
-use CartBoss\Api\Managers\Session;
 use CartBoss\Api\Resources\Events\BaseEvent;
 use CartBoss\Api\Resources\Events\OrderBaseEvent;
-use CartBoss\Api\Resources\Events\PurchaseEvent;
 use Rakit\Validation\Validator;
 use stdClass;
 
@@ -40,6 +38,7 @@ class CartBoss
             $func($interceptor->getAttribution());
         }
     }
+
     public function onCouponIntercepted($func)
     {
         $interceptor = new \CartBoss\Api\Interceptors\CouponInterceptor($this->api_key);
@@ -47,6 +46,7 @@ class CartBoss
             $func($interceptor->getCoupon());
         }
     }
+
     public function onContactIntercepted($func)
     {
         $interceptor = new \CartBoss\Api\Interceptors\ContactInterceptor($this->api_key);
@@ -87,7 +87,7 @@ class CartBoss
         $validation = $validator->make($event->getPayload(), $event->getRules());
         $validation->validate();
 
-        // simply throw exception with error messages
+        // throw exception with error messages
         if ($validation->fails()) {
             throw new EventValidationException(print_r($validation->errors()->all(), true));
         }

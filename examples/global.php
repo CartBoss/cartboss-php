@@ -1,8 +1,6 @@
 <?php
 
 
-use CartBoss\Api\Interceptors\ContactUrlInterceptor;
-
 require_once __DIR__ . '/../cartboss-php.php';
 
 const CB_API_KEY = 'GrpYQV3GGgUYMk4JIhJ2TPoC6GEHP7Tk6ApwiyGYtGdj76UnnfQiHYtzSqUM9kk4';
@@ -35,10 +33,6 @@ $my_order = array(
     // ...
 );
 
-/*
- * CartBoss SDK offers three helper methods to parse and decode various information, injected into all SMS urls that point to your website
- */
-
 $cartboss = new \CartBoss\Api\CartBoss(CB_API_KEY);
 
 /*
@@ -65,57 +59,27 @@ $cartboss->onCouponIntercepted(function (\CartBoss\Api\Resources\Coupon $coupon)
     // option 2: insert it to DB + attach it to current order
     // option 3: serialize, store to session|cookie, attach to order when created
 
-    var_dump($coupon);
+    echo $coupon->getCode() . PHP_EOL;
+    echo $coupon->getType() . PHP_EOL;
+    echo $coupon->getValue() . PHP_EOL;
+    echo $coupon->isFixedAmount() . PHP_EOL;
+    echo $coupon->isFreeShipping() . PHP_EOL;
+    echo $coupon->isPercentage() . PHP_EOL;
+    echo $coupon->isCustom() . PHP_EOL;
 
     // you can use CB utility cookie storage and use it later when applicable
     \CartBoss\Api\Storage\CookieStorage::set('coupon_code', $coupon->getCode(), 60 * 60 * 24 * 31);
 });
 
 /*
- * Coupon is an object that holds: discount_code, discount_value, etc
- * Coupon/Discount info is injected into all urls that point back to your website, if SMS is set to offer a discount eg: "Hi, you got 20% off. Click here <url>"
- */
-$cartboss->onContactIntercepted(function (\CartBoss\Api\Resources\Contact $contact) {
-    // option 1: insert it to DB + store coupon id|code to session|cookie
-    // option 2: insert it to DB + attach it to current order
-    // option 3: serialize, store to session|cookie, attach to order when created
-
-    var_dump($contact);
-
-    // you can use CB utility cookie storage and use it later when applicable
-    \CartBoss\Api\Storage\CookieStorage::set('contact', serialize($contact), 60 * 60 * 24 * 365);
-});
-
-
-//$cartboss_session = $cartboss->getSession();
-//echo "CARTBOSS SESSION TOKEN: " . $cartboss_session->getToken() . PHP_EOL;
-
-/*
- * Attribution token is essential information that links CartBoss message to an actual Purchase
- * Attribution token gets automatically injected into all SMS urls and should be used with Purchase event if available
- */
-
-//$attribution_interceptor = new \CartBoss\Api\Interceptors\AttributionUrlInterceptor();
-//if ($attribution_interceptor->getToken()) {
-//    echo "INTERCEPTED ATTRIBUTION TOKEN: " . $attribution_interceptor->getToken() . PHP_EOL;
-//
-//    // once token is intercepted, store it to active order or browser cookie for later use (Purchase Event)
-//
-//    // ... visitor places an order with your store
-//
-//    // create Purchase event and $event->setAttribution( ... stored attribution token ...)
-//}
-
-/*
  * Contact is an object that holds information like: first_name, phone, etc.
  * Contact info is injected into all urls that point to your website.
  * You can use this info to re-populate billing address, whenever person visits your store through SMS
  */
-
-$contact_interceptor = new ContactUrlInterceptor(CB_API_KEY);
-$contact = $contact_interceptor->getContact();
-if ($contact) {
-    echo "INTERCEPTED CONTACT INFO" . PHP_EOL;
+$cartboss->onContactIntercepted(function (\CartBoss\Api\Resources\Contact $contact) {
+    // option 1: insert it to DB + store coupon id|code to session|cookie
+    // option 2: insert it to DB + attach it to current order
+    // option 3: store to session|cookie, then insert into DB + attach to order
 
     echo $contact->getPhone() . PHP_EOL;
     echo $contact->getEmail() . PHP_EOL;
@@ -129,28 +93,25 @@ if ($contact) {
     echo $contact->getPostalCode() . PHP_EOL;
     echo $contact->getCountry() . PHP_EOL;
 
-    // once contact info is intercepted, you can use it to pre-populate checkout fields
-}
+    // -- store to cookie --
+    // you can use CB utility encryption class to encode array with a secret
+    // $encoded_contact_data = \CartBoss\Api\Encryption::encode(CB_API_KEY, $contact->getPayload());
+
+    // use CB utility cookie storage class to store encrypted data for later use [eg checkout page]
+    // \CartBoss\Api\Storage\CookieStorage::set('contact', $encoded_contact_data, 60 * 60 * 24 * 365);
+
+    // -- get from cookie --
+    // at checkout page; retrieve encoded contact data
+    // $cookie_data = \CartBoss\Api\Storage\CookieStorage::get('contact');
+
+    // decode it to array
+    // $decoded_contact_data = \CartBoss\Api\Encryption::decode(CB_API_KEY, $cookie_data);
+    // var_dump($decoded_contact_data);
+
+});
 
 
-/*
- * Coupon is an object that holds information discount_code, discount_value, etc
- * Coupon/Discount info is injected into all urls that point back to your website, if SMS is set to offer a discount eg: "Hi, you got 20% off. Click here <url>"
- */
+//$cartboss_session = $cartboss->getSession();
+//echo "CARTBOSS SESSION TOKEN: " . $cartboss_session->getToken() . PHP_EOL;
 
-//$coupon_interceptor = new CouponUrlInterceptor(CB_API_KEY, $attribution_interceptor->getToken());
-//$coupon = $coupon_interceptor->getCoupon();
-//if ($coupon) {
-//    echo "COUPON" . PHP_EOL;
-//
-//    echo $coupon->getCode() . PHP_EOL;
-//    echo $coupon->getType() . PHP_EOL;
-//    echo $coupon->getValue() . PHP_EOL;
-//    echo $coupon->isFixedAmount() . PHP_EOL;
-//    echo $coupon->isFreeShipping() . PHP_EOL;
-//    echo $coupon->isPercentage() . PHP_EOL;
-//
-//    // once coupon is intercepted, store it to your database and attach it to order once it's initialized (usually when first item is added to cart)
-//
-//    // also, you might want to prune coupons after 7 days with a crontab script
-//}
+
