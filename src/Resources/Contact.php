@@ -5,6 +5,7 @@ namespace CartBoss\Api\Resources;
 use CartBoss\Api\Interfaces\PayloadInterface;
 use CartBoss\Api\Resources\Addresses\BillingAddress;
 use CartBoss\Api\Utils;
+use Rakit\Validation\Validator;
 
 class Contact extends BillingAddress
 {
@@ -74,6 +75,21 @@ class Contact extends BillingAddress
     public function setAcceptsMarketing(bool $accepts_marketing): void
     {
         $this->accepts_marketing = $accepts_marketing;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValid(): bool
+    {
+        $validator = new Validator;
+        $validation = $validator->validate(array(
+            'phone' => $this->getPhone(),
+        ), [
+            'phone' => 'required',
+        ]);
+
+        return !$validation->fails();
     }
 
     public function __toString()

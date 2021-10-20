@@ -33,11 +33,11 @@ class CartBoss
 //        $this->session = new Session();
     }
 
-    public function onAttributionTokenIntercepted($func)
+    public function onAttributionIntercepted($func)
     {
         $interceptor = new \CartBoss\Api\Interceptors\AttributionInterceptor();
-        if ($interceptor->getToken()->isValid()) {
-            $func($interceptor->getToken());
+        if ($interceptor->getAttribution()->isValid()) {
+            $func($interceptor->getAttribution());
         }
     }
     public function onCouponIntercepted($func)
@@ -45,6 +45,13 @@ class CartBoss
         $interceptor = new \CartBoss\Api\Interceptors\CouponInterceptor($this->api_key);
         if ($interceptor->getCoupon()->isValid()) {
             $func($interceptor->getCoupon());
+        }
+    }
+    public function onContactIntercepted($func)
+    {
+        $interceptor = new \CartBoss\Api\Interceptors\ContactInterceptor($this->api_key);
+        if ($interceptor->getContact()->isValid()) {
+            $func($interceptor->getContact());
         }
     }
 

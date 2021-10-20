@@ -2,9 +2,11 @@
 
 namespace CartBoss\Api\Resources;
 
-class AttributionToken
+use Rakit\Validation\Validator;
+
+class Attribution
 {
-    protected $token;
+    private $token;
 
     public function __construct(string $token)
     {
@@ -18,7 +20,11 @@ class AttributionToken
 
     public function isValid(): bool
     {
-        return !empty($this->token);
+        $validator = new Validator;
+        $validation = $validator->validate(array('token' => $this->token), [
+            'token' => 'required|min:5',
+        ]);
+        return !$validation->fails();
     }
 
     public function __toString()

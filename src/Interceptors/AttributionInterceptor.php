@@ -2,7 +2,7 @@
 
 namespace CartBoss\Api\Interceptors;
 
-use CartBoss\Api\Resources\AttributionToken;
+use CartBoss\Api\Resources\Attribution;
 use CartBoss\Api\Utils;
 
 class AttributionInterceptor
@@ -10,19 +10,19 @@ class AttributionInterceptor
     const QUERY_VAR = "cb__att";
 
     /**
-     * @var AttributionToken
+     * @var Attribution
      */
     private $token;
 
     public function __construct()
     {
-        $this->token = new AttributionToken(Utils::get_array_value($_GET, static::QUERY_VAR, ''));
+        $this->token = new Attribution(Utils::get_array_value($_GET, static::QUERY_VAR, ''));
     }
 
     /**
-     * @return AttributionToken
+     * @return Attribution
      */
-    public function getToken(): AttributionToken
+    public function getAttribution(): Attribution
     {
         return $this->token;
     }

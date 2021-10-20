@@ -10,18 +10,18 @@ interface StorageInterface
      * @param int $max_age
      * @return mixed
      */
-    public function set($name, $value, $max_age = 60 * 60 * 24);
+    public static function set($name, $value, $max_age = 60 * 60 * 24);
 
     /**
      * @param $name
      * @param null $default
      * @return mixed
      */
-    public function get($name, $default = null);
+    public static function get($name, $default = null);
 
     /**
      * @param $name
      * @return void
      */
-    public function delete($name);
+    public static function delete($name);
 }

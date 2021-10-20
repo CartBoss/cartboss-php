@@ -2,6 +2,8 @@
 
 namespace CartBoss\Api\Resources;
 
+use Rakit\Validation\Validator;
+
 class Coupon
 {
     const TYPE_FIXED_AMOUNT = 'FIXED_AMOUNT';
@@ -35,7 +37,7 @@ class Coupon
      */
     public function setCode(?string $code): void
     {
-        $this->code = $code;
+        $this->code = trim($code);
     }
 
     /**
@@ -51,7 +53,7 @@ class Coupon
      */
     public function setType(?string $type): void
     {
-        $this->type = $type;
+        $this->type = trim(strtoupper($type));
     }
 
     /**
@@ -67,7 +69,7 @@ class Coupon
      */
     public function setValue(?string $value): void
     {
-        $this->value = $value;
+        $this->value = trim($value);
     }
 
     /**
@@ -102,8 +104,19 @@ class Coupon
         return $this->type == self::TYPE_FREE_SHIPPING;
     }
 
-    public function isValid():bool{
-        return isset($this->code, $this->type);
+    public function isValid(): bool
+    {
+        $validator = new Validator;
+        $validation = $validator->validate(array(
+            'code' => $this->code,
+            'type' => $this->type,
+            'value' => $this->value,
+        ), [
+            'code' => 'required',
+            'type' => "required|in:FIXED_AMOUNT,PERCENTAGE,FREE_SHIPPING,CUSTOM",
+        ]);
+
+        return !$validation->fails();
     }
 
     public function __toString()

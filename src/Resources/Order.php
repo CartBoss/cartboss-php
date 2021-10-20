@@ -96,26 +96,6 @@ class Order
         $this->shipping_address = $shipping_address;
     }
 
-    public function isValid(): bool
-    {
-        if (!isset($this->id)) {
-            return false;
-        }
-        if (!isset($this->value)) {
-            return false;
-        }
-        if (!isset($this->currency)) {
-            return false;
-        }
-        if (!isset($this->checkout_url)) {
-            return false;
-        }
-        if (!isset($this->billing_address) || !$this->billing_address->isValid()) {
-            return false;
-        }
-        return true;
-    }
-
     public function getPayload(): array
     {
         $data = array(
@@ -127,8 +107,13 @@ class Order
             'checkout_url' => $this->checkout_url,
             'billing_address' => null,
             'shipping_address' => null,
+            'metadata' => null,
             'items' => null
         );
+
+        if (isset($this->metadata)) {
+            $data['metadata'] = $this->metadata;
+        }
 
         if (isset($this->billing_address)) {
             $data['billing_address'] = $this->billing_address->getPayload();

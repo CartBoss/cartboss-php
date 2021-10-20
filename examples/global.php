@@ -45,11 +45,15 @@ $cartboss = new \CartBoss\Api\CartBoss(CB_API_KEY);
  * Attribution token is essential information that links CartBoss message to an actual Purchase
  * Attribution token gets automatically injected into all SMS urls and should be used with Purchase event when available
  */
-$cartboss->onAttributionTokenIntercepted(function (\CartBoss\Api\Resources\AttributionToken $attribution_token) {
+$cartboss->onAttributionIntercepted(function (\CartBoss\Api\Resources\Attribution $attribution) {
     // option 1: store it to session|cookie and assign to PurchaseEvent
     // option 2: store it to order (DB)
 
-    var_dump($attribution_token);
+    // debug
+    var_dump($attribution->getToken());
+
+    // you can use CB utility cookie storage and use it later when applicable
+    \CartBoss\Api\Storage\CookieStorage::set('attribution_token', $attribution->getToken(), 60 * 60 * 24 * 7);
 });
 
 /*
@@ -62,6 +66,24 @@ $cartboss->onCouponIntercepted(function (\CartBoss\Api\Resources\Coupon $coupon)
     // option 3: serialize, store to session|cookie, attach to order when created
 
     var_dump($coupon);
+
+    // you can use CB utility cookie storage and use it later when applicable
+    \CartBoss\Api\Storage\CookieStorage::set('coupon_code', $coupon->getCode(), 60 * 60 * 24 * 31);
+});
+
+/*
+ * Coupon is an object that holds: discount_code, discount_value, etc
+ * Coupon/Discount info is injected into all urls that point back to your website, if SMS is set to offer a discount eg: "Hi, you got 20% off. Click here <url>"
+ */
+$cartboss->onContactIntercepted(function (\CartBoss\Api\Resources\Contact $contact) {
+    // option 1: insert it to DB + store coupon id|code to session|cookie
+    // option 2: insert it to DB + attach it to current order
+    // option 3: serialize, store to session|cookie, attach to order when created
+
+    var_dump($contact);
+
+    // you can use CB utility cookie storage and use it later when applicable
+    \CartBoss\Api\Storage\CookieStorage::set('contact', serialize($contact), 60 * 60 * 24 * 365);
 });
 
 
