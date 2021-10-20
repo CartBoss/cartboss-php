@@ -69,6 +69,14 @@ abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
     }
 
     /**
+     * @return Order|null
+     */
+    public function getOrder(): ?Order
+    {
+        return $this->order;
+    }
+
+    /**
      * @param Contact|null $contact
      */
     public function setContact(?Contact $contact): void

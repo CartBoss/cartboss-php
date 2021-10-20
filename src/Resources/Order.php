@@ -10,7 +10,7 @@ class Order
     /**
      * @var string|null
      */
-    private $id;
+    private $nonce;
     /**
      * @var string|null
      */
@@ -99,7 +99,7 @@ class Order
     public function getPayload(): array
     {
         $data = array(
-            'id' => $this->id,
+            'id' => $this->nonce,
             'number' => $this->number,
             'is_cod' => $this->is_cod,
             'value' => $this->value,
@@ -143,17 +143,17 @@ class Order
     /**
      * @return string|null
      */
-    public function getId(): ?string
+    public function getNonce(): ?string
     {
-        return $this->id;
+        return $this->nonce;
     }
 
     /**
-     * @param string|null $id
+     * @param string|null $nonce
      */
-    public function setId(?string $id): void
+    public function setNonce(?string $nonce): void
     {
-        $this->id = $id;
+        $this->nonce = $nonce;
     }
 
     /**

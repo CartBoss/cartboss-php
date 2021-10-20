@@ -40,12 +40,12 @@ class ApiClient
     /**
      * Default response timeout (in seconds).
      */
-    const DEFAULT_TIMEOUT = 15;
+    const DEFAULT_TIMEOUT = 5;
 
     /**
      * Default connect timeout (in seconds).
      */
-    const DEFAULT_CONNECT_TIMEOUT = 5;
+    const DEFAULT_CONNECT_TIMEOUT = 2;
 
     /**
      * HTTP status code for an empty ok response.
@@ -64,13 +64,13 @@ class ApiClient
      */
     private $api_key;
 
-    public function __construct(string $api_key)
+    public function __construct(string $api_key, $timeout=null, $connect_timeout=null)
     {
         $this->api_key = trim($api_key);
 
         $this->httpClient = new Client([
-            RequestOptions::TIMEOUT => self::DEFAULT_TIMEOUT,
-            RequestOptions::CONNECT_TIMEOUT => self::DEFAULT_CONNECT_TIMEOUT,
+            RequestOptions::TIMEOUT => $timeout ?? self::DEFAULT_TIMEOUT,
+            RequestOptions::CONNECT_TIMEOUT => $connect_timeout ?? self::DEFAULT_CONNECT_TIMEOUT,
             RequestOptions::VERIFY => CaBundle::getBundledCaBundlePath(),
         ]);
 

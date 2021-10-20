@@ -54,7 +54,7 @@ $event->setContact($contact);
 
 // order section
 $order = new Order();
-$order->setId($cartboss_session->getToken());
+$order->setNonce($cartboss_session->getToken());
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');

@@ -4,7 +4,11 @@ namespace CartBoss\Api;
 
 use CartBoss\Api\Exceptions\ApiException;
 use CartBoss\Api\Exceptions\EventValidationException;
+use CartBoss\Api\Interceptors\AttributionInterceptor;
+use CartBoss\Api\Interceptors\ContactInterceptor;
+use CartBoss\Api\Interceptors\CouponInterceptor;
 use CartBoss\Api\Managers\ApiClient;
+use CartBoss\Api\Managers\Session;
 use CartBoss\Api\Resources\Events\BaseEvent;
 use CartBoss\Api\Resources\Events\OrderBaseEvent;
 use Rakit\Validation\Validator;
@@ -15,25 +19,29 @@ define('CARTBOSS_VERSION', '2.0.0');
 
 class CartBoss
 {
-    /**
-     * @var ApiClient
-     */
-    private $api_client;
+    const ORDER_NONCE = 'cb__order_nonce';
+
     /**
      * @var string
      */
     private $api_key;
+    private $timeout = null;
+    private $connect_timeout = null;
+
+    /**
+     * @var Session
+     */
+    private $session;
 
     public function __construct(string $api_key)
     {
         $this->api_key = $api_key;
-        $this->api_client = new ApiClient($api_key);
-//        $this->session = new Session();
+        $this->session = new Session();
     }
 
     public function onAttributionIntercepted($func)
     {
-        $interceptor = new \CartBoss\Api\Interceptors\AttributionInterceptor();
+        $interceptor = new AttributionInterceptor();
         if ($interceptor->getAttribution()->isValid()) {
             $func($interceptor->getAttribution());
         }
@@ -41,7 +49,7 @@ class CartBoss
 
     public function onCouponIntercepted($func)
     {
-        $interceptor = new \CartBoss\Api\Interceptors\CouponInterceptor($this->api_key);
+        $interceptor = new CouponInterceptor($this->api_key);
         if ($interceptor->getCoupon()->isValid()) {
             $func($interceptor->getCoupon());
         }
@@ -49,19 +57,11 @@ class CartBoss
 
     public function onContactIntercepted($func)
     {
-        $interceptor = new \CartBoss\Api\Interceptors\ContactInterceptor($this->api_key);
+        $interceptor = new ContactInterceptor($this->api_key);
         if ($interceptor->getContact()->isValid()) {
             $func($interceptor->getContact());
         }
     }
-
-//    /**
-//     * @return Session
-//     */
-//    public function getSession(): Session
-//    {
-//        return $this->session;
-//    }
 
     /**
      * @param OrderBaseEvent $event
@@ -71,7 +71,16 @@ class CartBoss
      */
     public function sendOrderEvent(OrderBaseEvent $event): ?stdClass
     {
-        return $this->sendEvent($event);
+        // if order nonce has NOT been set by developer
+        if (empty($event->getOrder()->getNonce()) && !empty($this->session->getToken())) {
+            $event->getOrder()->setNonce($this->session->getToken());
+        }
+
+        $response = $this->sendEvent($event);
+
+        $this->session->reset();
+
+        return $response;
     }
 
     /**
@@ -93,7 +102,8 @@ class CartBoss
         }
 
         // send it to CartBoss
-        return $this->api_client->performHttpCall(ApiClient::HTTP_POST, 'track', $this->api_client->parseRequestBody($event->getPayload()));
+        $client = new ApiClient($this->api_key, $this->timeout, $this->connect_timeout);
+        return $client->performHttpCall(ApiClient::HTTP_POST, 'track', $client->parseRequestBody($event->getPayload()));
     }
 
     /**
@@ -101,8 +111,18 @@ class CartBoss
      * @return stdClass|null
      * @throws ApiException
      */
-    public function getOrder(string $order_id): ?stdClass
+    private function getOrder(string $order_id): ?stdClass
     {
-        return $this->api_client->performHttpCall(ApiClient::HTTP_GET, "orders/{$order_id}");
+        $client = new ApiClient($this->api_key, $this->timeout, $this->connect_timeout);
+        return $client->performHttpCall(ApiClient::HTTP_GET, "orders/{$order_id}");
+    }
+
+    /**
+     * @param mixed $token
+     * @return bool
+     */
+    private function isValidOrderNonce($nonce): bool
+    {
+        return !is_null($nonce) && 1 === preg_match("/^[a-zA-Z0-9]+$/i", $nonce);
     }
 }

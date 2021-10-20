@@ -1,6 +1,5 @@
 <?php
 
-use CartBoss\Api\CartBoss;
 use CartBoss\Api\Exceptions\ApiException;
 use CartBoss\Api\Exceptions\EventValidationException;
 use CartBoss\Api\Resources\CartItem;
@@ -16,7 +15,7 @@ $active_order = $my_order;
 
 // test order depending on your business logic
 if (!$active_order || $active_order['state'] != 'abandoned') {
-    // nothing to report here, as order doesn't seem abandoned
+    // nothing to report here
     return;
 }
 
@@ -28,7 +27,7 @@ $contact = new Contact();
 $contact->setPhone(Utils::get_array_value($_POST, 'billing_phone'));
 $contact->setEmail(Utils::get_array_value($_POST, 'billing_email'));
 $contact->setAcceptsMarketing(Utils::get_array_value($_POST, 'accepts_marketing', false));
-//$contact->setIpAddress(IP_ADDRESS); // you can skip this setter for auto IP detection
+$contact->setIpAddress(IP_ADDRESS); // you can skip this setter for auto IP detection
 
 $contact->setFirstName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_first_name'), Utils::get_array_value($_POST, 'shipping_first_name')));
 $contact->setLastName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_last_name'), Utils::get_array_value($_POST, 'shipping_last_name')));
@@ -44,11 +43,11 @@ $event->setContact($contact);
 
 // order section
 $order = new Order();
-$order->setId($active_order['cb_order_token']);
+//$order->setNonce($active_order['cb_order_token']); // set manually only when sending from backend with cron
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
-$order->setCheckoutUrl(Utils::getCurrentUrl() . "/3_restore_cart.php?order_id={$active_order['cb_order_token']}");
+$order->setCheckoutUrl(Utils::getCurrentUrl() . "/3_restore_cart.php?order_id={$active_order['internal_id']}");
 
 foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();

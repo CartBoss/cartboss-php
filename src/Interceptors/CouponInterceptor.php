@@ -5,7 +5,7 @@ namespace CartBoss\Api\Interceptors;
 use CartBoss\Api\Resources\Coupon;
 use CartBoss\Api\Utils;
 
-class CouponInterceptor extends BaseInterceptor
+class CouponInterceptor extends DecodeableInterceptor
 {
     const QUERY_VAR = "cb__discount";
 

@@ -4,7 +4,7 @@ namespace CartBoss\Api\Interceptors;
 
 use CartBoss\Api\Encryption;
 
-abstract class BaseInterceptor
+abstract class DecodeableInterceptor
 {
     /**
      * @var string
