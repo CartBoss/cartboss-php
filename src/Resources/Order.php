@@ -2,15 +2,18 @@
 
 namespace CartBoss\Api\Resources;
 
+use CartBoss\Api\Managers\Session;
 use CartBoss\Api\Resources\Addresses\BillingAddress;
 use CartBoss\Api\Resources\Addresses\ShippingAddress;
+use League\Uri\Uri;
+use League\Uri\UriModifier;
 
 class Order
 {
     /**
      * @var string|null
      */
-    private $nonce;
+    private $id;
     /**
      * @var string|null
      */
@@ -99,12 +102,12 @@ class Order
     public function getPayload(): array
     {
         $data = array(
-            'id' => $this->nonce,
-            'number' => $this->number,
-            'is_cod' => $this->is_cod,
-            'value' => $this->value,
-            'currency' => $this->currency,
-            'checkout_url' => $this->checkout_url,
+            'id' => $this->getId(),
+            'number' => $this->getNumber(),
+            'is_cod' => $this->getIsCod(),
+            'value' => $this->getValue(),
+            'currency' => $this->getCurrency(),
+            'checkout_url' => $this->getCheckoutUrl(),
             'billing_address' => null,
             'shipping_address' => null,
             'metadata' => null,
@@ -143,17 +146,17 @@ class Order
     /**
      * @return string|null
      */
-    public function getNonce(): ?string
+    public function getId(): ?string
     {
-        return $this->nonce;
+        return $this->id;
     }
 
     /**
-     * @param string|null $nonce
+     * @param string|null $id
      */
-    public function setNonce(?string $nonce): void
+    public function setId(?string $id): void
     {
-        $this->nonce = $nonce;
+        $this->id = $id;
     }
 
     /**
@@ -225,7 +228,11 @@ class Order
      */
     public function getCheckoutUrl(): ?string
     {
-        return $this->checkout_url;
+        $checkout_url = Uri::createFromString($this->checkout_url);
+
+        $checkout_url = UriModifier::appendQuery($checkout_url, Session::QUERY_VAR . '=' . $this->getId());
+
+        return $checkout_url->jsonSerialize();;
     }
 
     /**

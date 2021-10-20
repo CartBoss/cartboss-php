@@ -3,7 +3,7 @@
 use CartBoss\Api\Utils;
 
 require_once __DIR__ . '/global.php';
-
+global $my_order;
 
 /*
  * This script will restore abandoned cart and attach it to new browser's session.
@@ -23,7 +23,7 @@ if (empty($order_id)) {
 
 // select order from your DB (be sure to prepare sql statement)
 // $order = "SELECT * FROM orders WHERE id = $order_id)
-$order = CURRENT_ORDER;
+$order = $my_order;
 
 // doesn't exist?
 if (!$order) {

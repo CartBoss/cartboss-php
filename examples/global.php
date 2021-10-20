@@ -10,7 +10,7 @@ const ATTRIBUTION_TOKEN = 'attribution_token';
 
 // assume this is your visitor's order object/array/active-record, it depends on your business logic
 $my_order = array(
-    'internal_id' => '...', // Database id (primary key for example)
+    'internal_id' => '1', // Database id (primary key for example)
     'value' => 40.0,
     'currency' => 'EUR',
     'state' => 'abandoned',
@@ -50,6 +50,10 @@ $cartboss->onAttributionIntercepted(function (\CartBoss\Api\Resources\Attributio
 
     // you can use CB utility cookie storage and use it later when applicable
     \CartBoss\Api\Storage\CookieStorage::set(ATTRIBUTION_TOKEN, $attribution->getToken(), 60 * 60 * 24 * 7);
+
+    // you can store add it to your order
+    global $order;
+    $order['cb_attribution_token'] = $attribution->getToken();
 });
 
 /*
@@ -61,13 +65,8 @@ $cartboss->onCouponIntercepted(function (\CartBoss\Api\Resources\Coupon $coupon)
     // option 2: insert it to DB + attach it to current order
     // option 3: serialize, store to session|cookie, attach to order when created
 
-    echo $coupon->getCode() . PHP_EOL;
-    echo $coupon->getType() . PHP_EOL;
-    echo $coupon->getValue() . PHP_EOL;
-    echo $coupon->isFixedAmount() . PHP_EOL;
-    echo $coupon->isFreeShipping() . PHP_EOL;
-    echo $coupon->isPercentage() . PHP_EOL;
-    echo $coupon->isCustom() . PHP_EOL;
+    // debug
+    var_dump($coupon);
 
     // you can use CB utility cookie storage and use it later when applicable
     \CartBoss\Api\Storage\CookieStorage::set('coupon_code', $coupon->getCode(), 60 * 60 * 24 * 31);
@@ -83,17 +82,8 @@ $cartboss->onContactIntercepted(function (\CartBoss\Api\Resources\Contact $conta
     // option 2: insert it to DB + attach it to current order
     // option 3: store to session|cookie, then insert into DB + attach to order
 
-    echo $contact->getPhone() . PHP_EOL;
-    echo $contact->getEmail() . PHP_EOL;
-    echo $contact->getFirstName() . PHP_EOL;
-    echo $contact->getLastName() . PHP_EOL;
-    echo $contact->getAddress1() . PHP_EOL;
-    echo $contact->getAddress2() . PHP_EOL;
-    echo $contact->getCompany() . PHP_EOL;
-    echo $contact->getState() . PHP_EOL;
-    echo $contact->getCity() . PHP_EOL;
-    echo $contact->getPostalCode() . PHP_EOL;
-    echo $contact->getCountry() . PHP_EOL;
+    // debug
+    var_dump($contact);
 
     // -- store to cookie --
     // you can use CB utility encryption class to encode array with a secret
@@ -109,11 +99,4 @@ $cartboss->onContactIntercepted(function (\CartBoss\Api\Resources\Contact $conta
     // decode it to array
     // $decoded_contact_data = \CartBoss\Api\Encryption::decode(CB_API_KEY, $cookie_data);
     // var_dump($decoded_contact_data);
-
 });
-
-
-//$cartboss_session = $cartboss->getSession();
-//echo "CARTBOSS SESSION TOKEN: " . $cartboss_session->getToken() . PHP_EOL;
-
-

@@ -43,11 +43,18 @@ $event->setContact($contact);
 
 // order section
 $order = new Order();
-//$order->setNonce($active_order['cb_order_token']); // set manually only when sending from backend with cron
+$order->setId($cartboss->getSessionToken());
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
-$order->setCheckoutUrl(Utils::getCurrentUrl() . "/3_restore_cart.php?order_id={$active_order['internal_id']}");
+
+/*
+ * Checkout url receives order identifier, which can be used to get actual order from your database.
+ * Although the simplest way is to use order's primary id, it's not the safest way to do it.
+ *
+ * example: https://domain/cartboss/restore-cart.php?order_hash=sha1($order_id)
+ */
+$order->setCheckoutUrl("/cart_restore.php?order_id=" . sha1($active_order['internal_id']));
 
 foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();
@@ -62,14 +69,12 @@ foreach ($active_order['cart_items'] as $obj) {
 
 $event->setOrder($order);
 
+// debug
+var_dump($event->getPayload());
+
 try {
-    // send event to CartBoss API
     $cartboss->sendOrderEvent($event);
-
     echo "event {$event->getEventName()} successfully sent";
-
-    // debug
-    var_dump($event->getPayload());
 
 } catch (EventValidationException $e) {
     echo "<h1>Event validation failed</h1>";

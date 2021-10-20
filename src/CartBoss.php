@@ -19,8 +19,6 @@ define('CARTBOSS_VERSION', '2.0.0');
 
 class CartBoss
 {
-    const ORDER_NONCE = 'cb__order_nonce';
-
     /**
      * @var string
      */
@@ -37,6 +35,12 @@ class CartBoss
     {
         $this->api_key = $api_key;
         $this->session = new Session();
+    }
+
+    public function setTimeout(int $timeout, int $connect_timeout)
+    {
+        $this->timeout = $timeout;
+        $this->connect_timeout = $connect_timeout;
     }
 
     public function onAttributionIntercepted($func)
@@ -64,6 +68,14 @@ class CartBoss
     }
 
     /**
+     * @return Session
+     */
+    public function getSessionToken(): string
+    {
+        return $this->session->getToken();
+    }
+
+    /**
      * @param OrderBaseEvent $event
      * @return stdClass|null
      * @throws ApiException
@@ -72,14 +84,12 @@ class CartBoss
     public function sendOrderEvent(OrderBaseEvent $event): ?stdClass
     {
         // if order nonce has NOT been set by developer
-        if (empty($event->getOrder()->getNonce()) && !empty($this->session->getToken())) {
-            $event->getOrder()->setNonce($this->session->getToken());
+        if (empty($event->getOrder()->getId()) && !empty($this->session->getToken())) {
+            $event->getOrder()->setId($this->session->getToken());
         }
 
         $response = $this->sendEvent($event);
-
         $this->session->reset();
-
         return $response;
     }
 

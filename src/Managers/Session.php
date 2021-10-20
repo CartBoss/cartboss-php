@@ -7,8 +7,8 @@ use CartBoss\Api\Utils;
 
 class Session
 {
-    const COOKIE_NAME = "order_nonce";
-    const QUERY_VAR = "cb_order_nonce";
+    const COOKIE_NAME = "order_token";
+    const QUERY_VAR = "cb_order_token";
 
     public function __construct()
     {
