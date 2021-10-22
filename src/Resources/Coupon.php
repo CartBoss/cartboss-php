@@ -2,10 +2,15 @@
 
 namespace CartBoss\Api\Resources;
 
+use CartBoss\Api\Interfaces\PayloadInterface;
 use Rakit\Validation\Validator;
 
-class Coupon
+class Coupon implements PayloadInterface
 {
+    const CODE = 'code';
+    const TYPE = 'type';
+    const VALUE = 'value';
+
     const TYPE_FIXED_AMOUNT = 'FIXED_AMOUNT';
     const TYPE_PERCENTAGE = 'PERCENTAGE';
     const TYPE_FREE_SHIPPING = 'FREE_SHIPPING';
@@ -117,6 +122,15 @@ class Coupon
         ]);
 
         return !$validation->fails();
+    }
+
+    public function getPayload(): array
+    {
+        return array(
+            self::CODE => $this->getCode(),
+            self::TYPE => $this->getType(),
+            self::VALUE => $this->getValue(),
+        );
     }
 
     public function __toString()

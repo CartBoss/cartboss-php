@@ -6,13 +6,27 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="js/cartboss-helper.js"></script>
+    <script src="/js/cartboss-helper.js"></script>
 </head>
 <body>
 <div class="container py-2">
     <h1>Checkout sample</h1>
 
-    <form method="post" action="event_purchase.php">
+    <div class="bg-light p-2">
+        <h5>Attribution token</h5>
+        <p>
+            <?php echo \CartBoss\Api\Storage\ContextStorage::get(ATTRIBUTION_TOKEN); ?>
+        </p>
+
+        <h5>Coupon</h5>
+        <p>
+            <?php echo \CartBoss\Api\Storage\ContextStorage::get(COUPON); ?>
+        </p>
+    </div>
+
+    <hr>
+
+    <form method="post" action="/event_purchase.php">
         <div class="mb-1">
             <label for="billing_phone" class="form-label">Phone number *</label>
             <input autocomplete="off" class="required form-control" id="billing_phone" name="billing_phone" required="required" type="tel" value="">

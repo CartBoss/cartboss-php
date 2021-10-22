@@ -20,6 +20,6 @@ abstract class DecodeableInterceptor
 
     protected function decode(string $input): ?array
     {
-        return Encryption::decode($this->secret, $input);
+        return Encryption::decrypt($this->secret, $input);
     }
 }

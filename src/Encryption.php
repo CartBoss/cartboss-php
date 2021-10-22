@@ -9,7 +9,7 @@ class Encryption
     const IV = 'iv';
     const CIPHERTEXT = 'ciphertext';
 
-    public static function encode(string $secret, array $input): ?string
+    public static function encrypt(string $secret, array $input): ?string
     {
         try {
             $ivlen = openssl_cipher_iv_length(self::CIPHER_ALGO);
@@ -27,7 +27,7 @@ class Encryption
         }
     }
 
-    public static function decode(string $secret, string $input)
+    public static function decrypt(string $secret, string $input)
     {
         try {
             $input = base64_decode($input);
