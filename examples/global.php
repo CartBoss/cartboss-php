@@ -94,7 +94,7 @@ $cartboss->onAttributionIntercepted(function (Attribution $attribution) {
  */
 $cartboss->onCouponIntercepted(function (Coupon $coupon) {
     // Debug: Store it to ContextStorage and display in checkout html
-    ContextStorage::set(COUPON, $coupon->getCode());
+    ContextStorage::set(COUPON, $coupon->getPayload());
 
 
     //////////////
@@ -141,7 +141,7 @@ $cartboss->onCouponIntercepted(function (Coupon $coupon) {
  */
 $cartboss->onContactIntercepted(function (Contact $contact) {
     // Debug: Store it to ContextStorage and display in checkout html
-    ContextStorage::set(CONTACT, $contact);
+    ContextStorage::set(CONTACT, $contact->getPayload());
 
     //////////////
     // Option 2: Save it to cookie and inject directly into checkout coupon field
@@ -159,5 +159,5 @@ $cartboss->onContactIntercepted(function (Contact $contact) {
     $contact_array = Encryption::decrypt(PRIVATE_KEY, $encrypted_contact_data); // skip this step if you skipped encrypt step above
 
     // Step 3: push contact data to checkout html and populate billing fields
-    
+
 });

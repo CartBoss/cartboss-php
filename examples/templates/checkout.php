@@ -1,3 +1,9 @@
+<?php
+
+use CartBoss\Api\Storage\ContextStorage;
+
+?>
+
 <html>
 <head>
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1, shrink-to-fit=no">
@@ -13,15 +19,14 @@
     <h1>Checkout sample</h1>
 
     <div class="bg-light p-2">
-        <h5>Attribution token</h5>
-        <p>
-            <?php echo \CartBoss\Api\Storage\ContextStorage::get(ATTRIBUTION_TOKEN); ?>
-        </p>
+        <h5>Attribution token <a href="?generate=attribution" class="btn btn-sm btn-link">Generate</a></h5>
+        <pre><?php print_r(ContextStorage::get(ATTRIBUTION_TOKEN)); ?></pre>
 
-        <h5>Coupon</h5>
-        <p>
-            <?php echo \CartBoss\Api\Storage\ContextStorage::get(COUPON); ?>
-        </p>
+        <h5>Coupon <a href="?generate=coupon" class="btn btn-sm btn-link">Generate</a></h5>
+        <pre><?php print_r(ContextStorage::get(COUPON)); ?></pre>
+
+        <h5>Contact <a href="?generate=contact" class="btn btn-sm btn-link">Generate</a></h5>
+        <pre><?php print_r(ContextStorage::get(CONTACT)); ?></pre>
     </div>
 
     <hr>

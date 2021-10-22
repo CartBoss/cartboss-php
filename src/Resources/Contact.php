@@ -2,7 +2,6 @@
 
 namespace CartBoss\Api\Resources;
 
-use CartBoss\Api\Interfaces\PayloadInterface;
 use CartBoss\Api\Resources\Addresses\BillingAddress;
 use CartBoss\Api\Utils;
 use Rakit\Validation\Validator;

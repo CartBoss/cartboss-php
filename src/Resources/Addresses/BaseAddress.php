@@ -6,6 +6,16 @@ use CartBoss\Api\Interfaces\PayloadInterface;
 
 abstract class BaseAddress implements PayloadInterface
 {
+    const FIRST_NAME = 'first_name';
+    const LAST_NAME = 'last_name';
+    const ADDRESS_1 = 'address_1';
+    const ADDRESS_2 = 'address_2';
+    const COMPANY = 'company';
+    const CITY = 'city';
+    const STATE = 'state';
+    const POSTAL_CODE = 'postal_code';
+    const COUNTRY = 'country';
+
     /**
      * @var string|null
      */
@@ -46,15 +56,15 @@ abstract class BaseAddress implements PayloadInterface
     public function getPayload(): array
     {
         return array(
-            'first_name' => $this->getFirstName(),
-            'last_name' => $this->getLastName(),
-            'address_1' => $this->getAddress1(),
-            'address_2' => $this->getAddress2(),
-            'company' => $this->getCompany(),
-            'city' => $this->getCity(),
-            'state' => $this->getState(),
-            'postal_code' => $this->getPostalCode(),
-            'country' => $this->getCountry(),
+            self::FIRST_NAME => $this->getFirstName(),
+            self::LAST_NAME => $this->getLastName(),
+            self::ADDRESS_1 => $this->getAddress1(),
+            self::ADDRESS_2 => $this->getAddress2(),
+            self::COMPANY => $this->getCompany(),
+            self::CITY => $this->getCity(),
+            self::STATE => $this->getState(),
+            self::POSTAL_CODE => $this->getPostalCode(),
+            self::COUNTRY => $this->getCountry(),
         );
     }
 
