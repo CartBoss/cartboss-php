@@ -9,8 +9,8 @@ use CartBoss\Api\Utils;
 require __DIR__ . '/global.php';
 require __DIR__ . '/utils.php';
 
-$generate = Utils::get_array_value($_GET, 'generate');
 
+$generate = Utils::get_array_value($_GET, 'generate');
 if ($generate == 'attribution') {
     header("Location: ?" . AttributionInterceptor::QUERY_VAR . "=" . Utils::get_random_string());
     exit;
