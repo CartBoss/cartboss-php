@@ -27,7 +27,7 @@ $contact = new Contact();
 $contact->setPhone(Utils::get_array_value($_POST, 'billing_phone'));
 $contact->setEmail(Utils::get_array_value($_POST, 'billing_email'));
 $contact->setAcceptsMarketing(Utils::get_array_value($_POST, 'accepts_marketing', false));
-$contact->setIpAddress(IP_ADDRESS); // you can skip this setter for auto IP detection
+$contact->setIpAddress(FAKE_IP_ADDRESS); // you can skip this setter for auto IP detection
 
 $contact->setFirstName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_first_name'), Utils::get_array_value($_POST, 'shipping_first_name')));
 $contact->setLastName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_last_name'), Utils::get_array_value($_POST, 'shipping_last_name')));
@@ -43,7 +43,7 @@ $event->setContact($contact);
 
 // order section
 $order = new Order();
-$order->setId($cartboss->getSessionToken());
+$order->setId(sha1($active_order['id']));
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
@@ -54,7 +54,7 @@ $order->setIsCod($active_order['method'] == 'COD');
  *
  * example: https://domain/cartboss/restore-cart.php?order_hash=sha1($order_id)
  */
-$order->setCheckoutUrl(Utils::getCurrentHost() . "/cart_restore.php?order_hash=" . sha1($active_order['internal_id']));
+$order->setCheckoutUrl(Utils::getCurrentHost() . "/cart_restore.php?order_hash=" . sha1($active_order['id']));
 
 foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();

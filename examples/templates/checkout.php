@@ -16,21 +16,21 @@ use CartBoss\Api\Storage\ContextStorage;
 </head>
 <body>
 <div class="container py-2">
-    <h1>Checkout sample</h1>
-
+    <h1>Url param interceptors</h1>
     <div class="bg-light p-2">
-        <h5>Attribution token <a href="?generate=attribution" class="btn btn-sm btn-link">Generate</a></h5>
+        <h5>Attribution token <a href="?generate=attribution" class="btn btn-sm btn-link">Sample injection</a></h5>
         <pre><?php print_r(ContextStorage::get(ATTRIBUTION_TOKEN)); ?></pre>
 
-        <h5>Coupon <a href="?generate=coupon" class="btn btn-sm btn-link">Generate</a></h5>
+        <h5>Coupon <a href="?generate=coupon" class="btn btn-sm btn-link">Sample injection</a></h5>
         <pre><?php print_r(ContextStorage::get(COUPON)); ?></pre>
 
-        <h5>Contact <a href="?generate=contact" class="btn btn-sm btn-link">Generate</a></h5>
+        <h5>Contact <a href="?generate=contact" class="btn btn-sm btn-link">Sample injection</a></h5>
         <pre><?php print_r(ContextStorage::get(CONTACT)); ?></pre>
     </div>
 
     <hr>
 
+    <h1>Checkout sample</h1>
     <form method="post" action="/event_purchase.php">
         <div class="mb-1">
             <label for="billing_phone" class="form-label">Phone number *</label>

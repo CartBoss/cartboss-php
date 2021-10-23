@@ -32,7 +32,7 @@ $contact = new Contact();
 $contact->setPhone(Utils::get_array_value($_POST, 'billing_phone'));
 $contact->setEmail(Utils::get_array_value($_POST, 'billing_email'));
 $contact->setAcceptsMarketing(Utils::get_array_value($_POST, 'accepts_marketing', false));
-$contact->setIpAddress(IP_ADDRESS); // you can skip this setter for auto IP detection
+$contact->setIpAddress(FAKE_IP_ADDRESS); // you can skip this setter for auto IP detection
 
 $contact->setFirstName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_first_name'), Utils::get_array_value($_POST, 'shipping_first_name')));
 $contact->setLastName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_last_name'), Utils::get_array_value($_POST, 'shipping_last_name')));

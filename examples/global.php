@@ -13,7 +13,7 @@ require_once __DIR__ . '/../cartboss-php.php';
 
 const CB_API_KEY = 'GrpYQV3GGgUYMk4JIhJ2TPoC6GEHP7Tk6ApwiyGYtGdj76UnnfQiHYtzSqUM9kk4';
 //const CB_API_KEY = 'wr6p8q6Oqfe39ZzR07QJnqVkzFDNCKwxHH2gw1KskmQiG7pOj69V9XHzf61VQ3N2';
-const IP_ADDRESS = '127.0.0.1';
+const FAKE_IP_ADDRESS = '127.0.0.1';
 
 const PRIVATE_KEY = 'some long string';
 
@@ -23,7 +23,7 @@ const CONTACT = 'contact';
 
 // assume this is your visitor's order object/array/active-record, it depends on your business logic
 $my_order = array(
-    'internal_id' => '1', // Database id (primary key for example)
+    'id' => '1', // Database id (primary key for example)
     'value' => 40.0,
     'currency' => 'EUR',
     'state' => 'abandoned',

@@ -4,6 +4,7 @@ use CartBoss\Api\Encryption;
 use CartBoss\Api\Interceptors\AttributionInterceptor;
 use CartBoss\Api\Interceptors\ContactInterceptor;
 use CartBoss\Api\Interceptors\CouponInterceptor;
+use CartBoss\Api\Resources\Coupon;
 use CartBoss\Api\Utils;
 
 require __DIR__ . '/global.php';
@@ -18,8 +19,8 @@ if ($generate == 'attribution') {
 } elseif ($generate == 'coupon') {
     $data = array(
         CouponInterceptor::STRUCT_KEY_CODE => Utils::get_random_string(6),
-        CouponInterceptor::STRUCT_KEY_TYPE => 'percentage',
-        CouponInterceptor::STRUCT_KEY_VALUE => 25
+        CouponInterceptor::STRUCT_KEY_TYPE => array_rand(array_flip(array(Coupon::TYPE_CUSTOM, Coupon::TYPE_FIXED_AMOUNT, Coupon::TYPE_FREE_SHIPPING, Coupon::TYPE_PERCENTAGE)), 1),
+        CouponInterceptor::STRUCT_KEY_VALUE => rand(0,100)
     );
 
     $encoded = Encryption::encrypt(CB_API_KEY, $data);

@@ -4,14 +4,14 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.3",
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-openssl": "*",
     "composer/ca-bundle": "^1.2",
     "delight-im/cookie": "^3.4",
-    "guzzlehttp/guzzle": "^7.4",
+    "guzzlehttp/guzzle": "^7.3",
     "league/uri": "^6.5",
     "league/uri-components": "^2.4",
     "rakit/validation": "^1.4"
@@ -27,7 +27,7 @@
   "authors": [
     {
       "name": "Damjan Malis",
-      "email": "info@cartboss.io"
+      "email": "damjan@cartboss.io"
     }
   ]
 }
