@@ -2,7 +2,6 @@
 
 namespace CartBoss\Api\Interfaces;
 
-interface PayloadInterface
-{
+interface PayloadInterface {
     public function getPayload();
 }

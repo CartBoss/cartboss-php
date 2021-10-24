@@ -2,8 +2,7 @@
 
 namespace CartBoss\Api\Interfaces;
 
-interface StorageInterface
-{
+interface StorageInterface {
     /**
      * @param string $name
      * @param mixed $value

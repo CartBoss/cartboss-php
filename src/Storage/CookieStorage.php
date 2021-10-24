@@ -5,15 +5,13 @@ namespace CartBoss\Api\Storage;
 use CartBoss\Api\Interfaces\StorageInterface;
 use Delight\Cookie\Cookie;
 
-class CookieStorage implements StorageInterface
-{
+class CookieStorage implements StorageInterface {
     const NAMESPACE = '_cb_';
 
-    public static function set($name, $value, $timeout = 60 * 60 * 24 * 7)
-    {
-        if (isset($name, $value, $timeout)) {
+    public static function set($name, $value, $max_age = 60 * 60 * 24 * 7) {
+        if (isset($name, $value, $max_age)) {
             $cookie = new Cookie(self::NAMESPACE . $name);
-            $cookie->setMaxAge($timeout);
+            $cookie->setMaxAge($max_age);
             $cookie->setHttpOnly(true);
             $cookie->setSecureOnly(false);
             $cookie->setSameSiteRestriction(null);
@@ -24,8 +22,7 @@ class CookieStorage implements StorageInterface
         }
     }
 
-    public static function get($name, $default = null)
-    {
+    public static function get($name, $default = null) {
         $value = Cookie::get(self::NAMESPACE . $name);
         if (isset($value) && is_string($value)) {
             return base64_decode($value);
@@ -34,8 +31,7 @@ class CookieStorage implements StorageInterface
         return $default;
     }
 
-    public static function delete($name)
-    {
+    public static function delete($name) {
         $cookie = new Cookie(self::NAMESPACE . $name);
         $cookie->deleteAndUnset();
     }

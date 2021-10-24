@@ -5,8 +5,7 @@ namespace CartBoss\Api\Interceptors;
 use CartBoss\Api\Resources\Coupon;
 use CartBoss\Api\Utils;
 
-class CouponInterceptor extends DecodeableInterceptor
-{
+class CouponInterceptor extends DecodableInterceptor {
     const QUERY_VAR = "cb__discount";
 
     const STRUCT_KEY_CODE = 'code';
@@ -15,8 +14,7 @@ class CouponInterceptor extends DecodeableInterceptor
 
     private $coupon;
 
-    public function __construct(string $api_key)
-    {
+    public function __construct(string $api_key) {
         parent::__construct($api_key);
 
         $this->coupon = new Coupon();
@@ -35,8 +33,7 @@ class CouponInterceptor extends DecodeableInterceptor
     /**
      * @return Coupon
      */
-    public function getCoupon(): Coupon
-    {
+    public function getCoupon(): Coupon {
         return $this->coupon;
     }
 }

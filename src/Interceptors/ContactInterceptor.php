@@ -5,8 +5,7 @@ namespace CartBoss\Api\Interceptors;
 use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Utils;
 
-class ContactInterceptor extends DecodeableInterceptor
-{
+class ContactInterceptor extends DecodableInterceptor {
     const QUERY_VAR = "cb__contact";
 
     const STRUCT_KEY_EMAIL = 'em';
@@ -26,8 +25,7 @@ class ContactInterceptor extends DecodeableInterceptor
      */
     private $contact;
 
-    public function __construct(string $api_key)
-    {
+    public function __construct(string $api_key) {
         parent::__construct($api_key);
 
         $this->contact = new Contact();
@@ -54,8 +52,7 @@ class ContactInterceptor extends DecodeableInterceptor
     /**
      * @return Contact
      */
-    public function getContact(): Contact
-    {
+    public function getContact(): Contact {
         return $this->contact;
     }
 }

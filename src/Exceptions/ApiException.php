@@ -9,8 +9,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use stdClass;
 
-class ApiException extends Exception
-{
+class ApiException extends Exception {
     /**
      * @var RequestInterface|null
      */
@@ -35,8 +34,7 @@ class ApiException extends Exception
         $request = null,
         $response = null,
         $previous = null
-    )
-    {
+    ) {
         $this->raisedAt = new DateTimeImmutable();
 
         $formattedRaisedAt = $this->raisedAt->format(DateTimeInterface::ISO8601);
@@ -62,8 +60,7 @@ class ApiException extends Exception
     /**
      * @throws ApiException
      */
-    public static function createFromResponse($response, $request = null, $previous = null): ApiException
-    {
+    public static function createFromResponse($response, $request = null, $previous = null): ApiException {
         $object = static::parseResponseBody($response);
 
         $detail = print_r($object->detail, true);
@@ -82,8 +79,7 @@ class ApiException extends Exception
      * @return stdClass
      * @throws ApiException
      */
-    protected static function parseResponseBody(ResponseInterface $response): stdClass
-    {
+    protected static function parseResponseBody(ResponseInterface $response): stdClass {
         $body = (string)$response->getBody();
 
         $object = @json_decode($body);
@@ -95,24 +91,21 @@ class ApiException extends Exception
         return $object;
     }
 
-    public function getResponse(): ?ResponseInterface
-    {
+    public function getResponse(): ?ResponseInterface {
         return $this->response;
     }
 
     /**
      * @return bool
      */
-    public function hasResponse(): bool
-    {
+    public function hasResponse(): bool {
         return $this->response !== null;
     }
 
     /**
      * @return RequestInterface
      */
-    public function getRequest(): ?RequestInterface
-    {
+    public function getRequest(): ?RequestInterface {
         return $this->request;
     }
 
@@ -121,8 +114,7 @@ class ApiException extends Exception
      *
      * @return DateTimeImmutable
      */
-    public function getRaisedAt(): DateTimeImmutable
-    {
+    public function getRaisedAt(): DateTimeImmutable {
         return $this->raisedAt;
     }
 }

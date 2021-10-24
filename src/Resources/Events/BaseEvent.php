@@ -4,8 +4,7 @@ namespace CartBoss\Api\Resources\Events;
 
 use CartBoss\Api\Interfaces\PayloadInterface;
 
-abstract class BaseEvent implements PayloadInterface
-{
+abstract class BaseEvent implements PayloadInterface {
     const EVENT_NAME = null;
 
     private $timestamp;
@@ -15,14 +14,12 @@ abstract class BaseEvent implements PayloadInterface
         'timestamp' => 'required|integer',
     );
 
-    public function __construct($rules = array())
-    {
+    public function __construct($rules = array()) {
         $this->timestamp = time();
         $this->rules = array_merge($this->rules, $rules);
     }
 
-    public function getPayload(): array
-    {
+    public function getPayload(): array {
         return array(
             'platform' => 'API',
             'event' => static::EVENT_NAME,
@@ -30,18 +27,15 @@ abstract class BaseEvent implements PayloadInterface
         );
     }
 
-    public function getEventName(): string
-    {
+    public function getEventName(): string {
         return static::EVENT_NAME;
     }
 
-    public function setTimestamp($value)
-    {
+    public function setTimestamp($value) {
         $this->timestamp = $value;
     }
 
-    public function getRules(): array
-    {
+    public function getRules(): array {
         return $this->rules;
     }
 

@@ -17,6 +17,19 @@ class Utils {
         return self::getArrayValue($_SERVER, 'HTTP_USER_AGENT');
     }
 
+    public static function getArrayValue($arr, $key, $default = null) {
+        if (!is_array($arr)) {
+            return $default;
+        }
+        if (!array_key_exists($key, $arr)) {
+            return $default;
+        }
+        if (empty($arr[$key])) {
+            return $default;
+        }
+        return $arr[$key];
+    }
+
     public static function getIp() {
         foreach (
             array(
@@ -43,19 +56,6 @@ class Utils {
         }
 
         return null;
-    }
-
-    public static function getArrayValue($arr, $key, $default = null) {
-        if (!is_array($arr)) {
-            return $default;
-        }
-        if (!array_key_exists($key, $arr)) {
-            return $default;
-        }
-        if (empty($arr[$key])) {
-            return $default;
-        }
-        return $arr[$key];
     }
 
     public static function getFirstNonEmpty() {

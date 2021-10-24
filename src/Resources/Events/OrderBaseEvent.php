@@ -2,12 +2,11 @@
 
 namespace CartBoss\Api\Resources\Events;
 
+use CartBoss\Api\Interfaces\PayloadInterface;
 use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Resources\Order;
-use CartBoss\Api\Interfaces\PayloadInterface;
 
-abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
-{
+abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface {
     /**
      * @var string|null
      */
@@ -23,8 +22,7 @@ abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
      */
     private $contact;
 
-    public function __construct($rules = array())
-    {
+    public function __construct($rules = array()) {
         parent::__construct(array_merge(array(
             'contact' => 'required',
             'contact.ip_address' => 'required|ip',
@@ -44,50 +42,44 @@ abstract class OrderBaseEvent extends BaseEvent implements PayloadInterface
     }
 
     /**
-     * @param string|null $attribution_token
-     */
-    public function setAttributionToken(?string $attribution_token): void
-    {
-        $this->attribution_token = $attribution_token;
-    }
-
-    /**
      * @return string|null
      */
-    public function getAttributionToken(): ?string
-    {
+    public function getAttributionToken(): ?string {
         return $this->attribution_token;
     }
 
     /**
-     * @param Order|null $order
+     * @param string|null $attribution_token
      */
-    public function setOrder(?Order $order): void
-    {
-        $this->order = $order;
+    public function setAttributionToken(?string $attribution_token): void {
+        $this->attribution_token = $attribution_token;
     }
 
     /**
      * @return Order|null
      */
-    public function getOrder(): ?Order
-    {
+    public function getOrder(): ?Order {
         return $this->order;
+    }
+
+    /**
+     * @param Order|null $order
+     */
+    public function setOrder(?Order $order): void {
+        $this->order = $order;
     }
 
     /**
      * @param Contact|null $contact
      */
-    public function setContact(?Contact $contact): void
-    {
+    public function setContact(?Contact $contact): void {
         $this->contact = $contact;
     }
 
     /**
      * @return array
      */
-    public function getPayload(): array
-    {
+    public function getPayload(): array {
         $data = parent::getPayload();
 
         $data['attribution'] = $this->attribution_token;

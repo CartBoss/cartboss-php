@@ -2,8 +2,7 @@
 
 namespace CartBoss\Api\Resources\Addresses;
 
-class BillingAddress extends BaseAddress
-{
+class BillingAddress extends BaseAddress {
     const PHONE = 'phone';
     const EMAIL = 'email';
 
@@ -19,13 +18,11 @@ class BillingAddress extends BaseAddress
     /**
      * @return bool
      */
-    public function isValid(): bool
-    {
+    public function isValid(): bool {
         return !empty($this->phone) && strlen($this->phone) > 5;
     }
 
-    public function getPayload(): array
-    {
+    public function getPayload(): array {
         return array_merge(parent::getPayload(), array(
             self::PHONE => $this->getPhone(),
             self::EMAIL => $this->getEmail(),
@@ -35,32 +32,28 @@ class BillingAddress extends BaseAddress
     /**
      * @return string|null
      */
-    public function getPhone(): ?string
-    {
+    public function getPhone(): ?string {
         return $this->phone;
     }
 
     /**
      * @param string|null $phone
      */
-    public function setPhone(?string $phone): void
-    {
+    public function setPhone(?string $phone): void {
         $this->phone = $phone;
     }
 
     /**
      * @return string|null
      */
-    public function getEmail(): ?string
-    {
+    public function getEmail(): ?string {
         return $this->email;
     }
 
     /**
      * @param string|null $email
      */
-    public function setEmail(?string $email): void
-    {
+    public function setEmail(?string $email): void {
         $this->email = $email;
     }
 }

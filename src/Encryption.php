@@ -2,15 +2,15 @@
 
 namespace CartBoss\Api;
 
-class Encryption
-{
+use Throwable;
+
+class Encryption {
     const CIPHER_ALGO = 'aes-256-cbc';
 
     const IV = 'iv';
     const CIPHERTEXT = 'ciphertext';
 
-    public static function encrypt(string $secret, array $input): ?string
-    {
+    public static function encrypt(string $secret, array $input): ?string {
         try {
             $ivlen = openssl_cipher_iv_length(self::CIPHER_ALGO);
             $iv = openssl_random_pseudo_bytes($ivlen);
@@ -22,13 +22,16 @@ class Encryption
                 self::IV => base64_encode($iv),
                 self::CIPHERTEXT => $encrypted
             )));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return null;
         }
     }
 
-    public static function decrypt(string $secret, ?string $input)
-    {
+    private static function prepareSecret($secret) {
+        return mb_substr(trim($secret), 0, 32);
+    }
+
+    public static function decrypt(string $secret, ?string $input) {
         try {
             $input = base64_decode($input);
             $json = json_decode($input, true);
@@ -38,13 +41,8 @@ class Encryption
             $decrypted = openssl_decrypt($cipher, self::CIPHER_ALGO, self::prepareSecret($secret), 0, $iv);
 
             return json_decode($decrypted, true);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return null;
         }
-    }
-
-    private static function prepareSecret($secret)
-    {
-        return mb_substr(trim($secret), 0, 32);
     }
 }

@@ -12,8 +12,7 @@ use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use stdClass;
 
-class ApiClient
-{
+class ApiClient {
     /**
      * Version of our client.
      */
@@ -64,8 +63,7 @@ class ApiClient
      */
     private $api_key;
 
-    public function __construct(string $api_key, $timeout=null, $connect_timeout=null)
-    {
+    public function __construct(string $api_key, $timeout = null, $connect_timeout = null) {
         $this->api_key = trim($api_key);
 
         $this->httpClient = new Client([
@@ -78,8 +76,7 @@ class ApiClient
         $this->addVersionString("PHP/" . phpversion());
     }
 
-    public function addVersionString($versionString): ApiClient
-    {
+    public function addVersionString($versionString): ApiClient {
         $this->version_strings[] = str_replace([" ", "\t", "\n", "\r"], '-', $versionString);
 
         return $this;
@@ -88,8 +85,7 @@ class ApiClient
     /**
      * @throws ApiException
      */
-    public function performHttpCall($httpMethod, $apiMethod, $httpBody = null): ?stdClass
-    {
+    public function performHttpCall($httpMethod, $apiMethod, $httpBody = null): ?stdClass {
         if (empty($this->api_key)) {
             throw new ApiException("You have not set an API key.");
         }
@@ -118,8 +114,7 @@ class ApiClient
     /**
      * @throws ApiException
      */
-    public function send($httpMethod, $url, $headers, $httpBody): ?stdClass
-    {
+    public function send($httpMethod, $url, $headers, $httpBody): ?stdClass {
         $request = new Request($httpMethod, $url, $headers, $httpBody);
 
         try {
@@ -150,8 +145,7 @@ class ApiClient
      * @return stdClass|null
      * @throws ApiException
      */
-    private function parseResponseBody(ResponseInterface $response): ?stdClass
-    {
+    private function parseResponseBody(ResponseInterface $response): ?stdClass {
         $body = (string)$response->getBody();
         if (empty($body)) {
             if ($response->getStatusCode() === self::HTTP_NO_CONTENT) {
@@ -179,8 +173,7 @@ class ApiClient
      * @return null|string
      * @throws ApiException
      */
-    public function parseRequestBody(array $body): ?string
-    {
+    public function parseRequestBody(array $body): ?string {
         if (empty($body)) {
             return null;
         }

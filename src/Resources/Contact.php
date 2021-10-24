@@ -6,8 +6,7 @@ use CartBoss\Api\Resources\Addresses\BillingAddress;
 use CartBoss\Api\Utils;
 use Rakit\Validation\Validator;
 
-class Contact extends BillingAddress
-{
+class Contact extends BillingAddress {
     /**
      * @var string|null
      */
@@ -21,14 +20,12 @@ class Contact extends BillingAddress
      */
     private $accepts_marketing = false;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->ip_address = Utils::getIp();
         $this->user_agent = Utils::getUserAgent();
     }
 
-    public function getPayload(): array
-    {
+    public function getPayload(): array {
         return array_merge(parent::getPayload(), array(
             'ip_address' => $this->getIpAddress(),
             'user_agent' => $this->getUserAgent(),
@@ -39,48 +36,42 @@ class Contact extends BillingAddress
     /**
      * @return string|null
      */
-    public function getIpAddress(): ?string
-    {
+    public function getIpAddress(): ?string {
         return $this->ip_address;
     }
 
     /**
      * @param string $ip_address
      */
-    public function setIpAddress(string $ip_address): void
-    {
+    public function setIpAddress(string $ip_address): void {
         $this->ip_address = $ip_address;
     }
 
     /**
      * @return string|null
      */
-    public function getUserAgent(): ?string
-    {
+    public function getUserAgent(): ?string {
         return $this->user_agent;
     }
 
     /**
      * @return bool
      */
-    public function getAcceptsMarketing(): bool
-    {
+    public function getAcceptsMarketing(): bool {
         return $this->accepts_marketing;
     }
 
     /**
      * @param bool $accepts_marketing
      */
-    public function setAcceptsMarketing(bool $accepts_marketing): void
-    {
+    public function setAcceptsMarketing(bool $accepts_marketing): void {
         $this->accepts_marketing = $accepts_marketing;
     }
 
     /**
      * @return bool
      */
-    public function isValid(): bool
-    {
+    public function isValid(): bool {
         $validator = new Validator;
         $validation = $validator->validate(array(
             'phone' => $this->getPhone(),
@@ -91,8 +82,7 @@ class Contact extends BillingAddress
         return !$validation->fails();
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getPhone();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace CartBoss\Api\Resources\Addresses;
 
-class ShippingAddress extends BaseAddress
-{
+class ShippingAddress extends BaseAddress {
 
 }
