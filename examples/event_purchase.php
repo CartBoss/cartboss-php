@@ -77,6 +77,9 @@ try {
     $cartboss->sendOrderEvent($event);
     echo "event {$event->getEventName()} successfully sent";
 
+    // clear attribution token cookie
+    CookieStorage::delete(COOKIE_ATTRIBUTION_TOKEN);
+
 } catch (EventValidationException $e) {
     // debug
     ContextStorage::set(TMPL_EVENT_ERROR, $e->getMessage());

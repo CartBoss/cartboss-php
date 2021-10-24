@@ -35,3 +35,6 @@ if ($order['state'] !== 'abandoned') {
 }
 
 // Step 5: Restore visitor's session and redirect to checkout
+
+// Debug
+var_dump($order);

@@ -22,8 +22,7 @@ class ApiClient
     /**
      * Endpoint of the remote API.
      */
-//    const API_ENDPOINT = "https://api.cartboss.io";
-    const API_ENDPOINT = "http://127.0.0.1:8082/";
+    const API_ENDPOINT = "https://api.cartboss.io";
 
     /**
      * Version of the remote API.

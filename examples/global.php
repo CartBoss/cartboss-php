@@ -15,7 +15,13 @@ require_once __DIR__ . '/../cartboss-php.php';
 // include example helper methods
 require __DIR__ . '/utils.php';
 
-// your website API key
+/*
+ * Your CartBoss API key.
+ *
+ * Each domain requires unique API key. You can create one at https://app.cartboss.io/sites
+ *
+ *
+ */
 const CB_API_KEY = '1111111111111111111111111111111111111111111111111111111111111111';
 
 // visitor's ip address (fake)
@@ -31,7 +37,11 @@ const TMPL_EVENT_ERROR = 'TMPL_EVENT_ERROR';
 const COOKIE_ATTRIBUTION_TOKEN = 'attribution_token';
 const COOKIE_CONTACT = 'contact';
 
-// mockup visitor's active cart/order record/table/...
+/*
+ * Sample order/cart data
+ *
+ * This variable represents a mocked up object of visitor's active cart/order record/table/...
+ */
 $store_order = array(
     'id' => '1', // Database id (primary key for example)
     'value' => 40.0,
@@ -58,7 +68,9 @@ $store_order = array(
     // ...
 );
 
-// mockup your coupon table
+/*
+ * Sample store coupon table
+ */
 $store_coupons = array(
     array(
         'id' => '1',
@@ -89,6 +101,8 @@ $cartboss->onAttributionIntercepted(function(Attribution $attribution) {
     CookieStorage::set(COOKIE_ATTRIBUTION_TOKEN, $attribution->getToken(), 60 * 60 * 24 * 30);
 
     // Step 2: Attach attribution token to a purchase event (see event_purchase.php)
+
+    // Step 3: If event succeeded, clear token cookie
 
 });
 

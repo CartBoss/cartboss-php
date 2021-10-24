@@ -28,7 +28,7 @@ $contact_array = Encryption::decrypt(CB_API_KEY, $encrypted_contact_data);
     <div class="d-flex justify-content-between align-items-center">
         <h1>Intercepted data</h1>
         <div>
-            <a href="/?reset=1" class="btn btn-primary">Reset &rarr;</a>
+            <a href="/?reset=1" class="btn btn-danger">Reset &rarr;</a>
         </div>
     </div>
     <hr>
