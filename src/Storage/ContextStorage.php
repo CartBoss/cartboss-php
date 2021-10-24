@@ -16,7 +16,7 @@ class ContextStorage implements StorageInterface
 
     public static function get($name, $default = null)
     {
-        return Utils::get_array_value(self::$values, $name, $default);
+        return Utils::getArrayValue(self::$values, $name, $default);
     }
 
     public static function delete($name)

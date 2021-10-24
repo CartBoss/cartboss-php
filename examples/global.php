@@ -77,8 +77,9 @@ $store_coupons = array(
 $cartboss = new CartBoss(CB_API_KEY, true);
 
 /*
- * Attribution token is essential information that links CartBoss message to an actual Purchase
- * Attribution token gets automatically injected into all SMS urls and should be used with Purchase event when available
+ * CartBoss attribution token is a hash string, injected into all SMS urls by CartBoss platform.
+ * Your objective is to parse and attach it to a PurchaseEvent when sent back to CartBoss platform.
+ * If you omit using attribution token, CartBoss statistics will not work correctly.
  */
 $cartboss->onAttributionIntercepted(function(Attribution $attribution) {
     // Debug: Store it to ContextStorage and display in checkout html
@@ -87,7 +88,7 @@ $cartboss->onAttributionIntercepted(function(Attribution $attribution) {
     // Step 1: Store attribution token to browser's cookie for 30 days
     CookieStorage::set(COOKIE_ATTRIBUTION_TOKEN, $attribution->getToken(), 60 * 60 * 24 * 30);
 
-    // Step 2: Set attribution token into a purchase event call (see event_purchase.php)
+    // Step 2: Attach attribution token to a purchase event (see event_purchase.php)
 
 });
 
@@ -102,14 +103,15 @@ $cartboss->onCouponIntercepted(function(Coupon $coupon) {
     // Step 1: Check if coupon exists in your DB
     global $store_coupons, $store_order;
     if (!in_array($coupon->getCode(), $store_coupons)) {
-        // Step 2: insert coupon
-        // tip: clean CartBoss-generated coupons regularly with a custom cron job every 24 hrs
+        // Step 2: insert coupon (DB)
+        // pro-tip: clean CartBoss-generated coupons regularly with a custom cron job every 24 hrs
     }
 
-    // Step 3: Check if store_order doesn't already include thic coupon
-    if (Utils::get_array_value($store_order, 'coupon_code') != $coupon->getCode()) {
+    // Step 3: Check if store_order doesn't already use the coupon
+    if (Utils::getArrayValue($store_order, 'coupon_code') != $coupon->getCode()) {
         // Step 4: attach it to your order/cart DB/session record
         $store_order['coupon_code'] = $coupon->getCode();
+        // ...
     }
 });
 
@@ -121,10 +123,6 @@ $cartboss->onCouponIntercepted(function(Coupon $coupon) {
 $cartboss->onContactIntercepted(function(Contact $contact) {
     // Debug: Store it to ContextStorage and display in checkout html
     ContextStorage::set(TMPL_CONTACT, $contact->getPayload());
-
-    //////////////
-    // Option 1: Save billing info to browser's cookie for 1 year
-    //////////////
 
     // Step 1: convert contact to assoc array
     $contact_array = $contact->getPayload();

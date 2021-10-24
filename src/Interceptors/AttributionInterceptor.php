@@ -16,7 +16,7 @@ class AttributionInterceptor
 
     public function __construct()
     {
-        $this->token = new Attribution(Utils::get_array_value($_GET, static::QUERY_VAR, ''));
+        $this->token = new Attribution(Utils::getArrayValue($_GET, static::QUERY_VAR, ''));
     }
 
     /**

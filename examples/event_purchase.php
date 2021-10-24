@@ -31,20 +31,20 @@ $event->setAttributionToken($attribution_token);
 
 // contact section
 $contact = new Contact();
-$contact->setPhone(Utils::get_array_value($_POST, 'billing_phone'));
-$contact->setEmail(Utils::get_array_value($_POST, 'billing_email'));
-$contact->setAcceptsMarketing(Utils::get_array_value($_POST, 'accepts_marketing', false));
+$contact->setPhone(Utils::getArrayValue($_POST, 'billing_phone'));
+$contact->setEmail(Utils::getArrayValue($_POST, 'billing_email'));
+$contact->setAcceptsMarketing(Utils::getArrayValue($_POST, 'accepts_marketing', false));
 $contact->setIpAddress(FAKE_IP_ADDRESS); // you can skip this setter for auto IP detection
 
-$contact->setFirstName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_first_name'), Utils::get_array_value($_POST, 'shipping_first_name')));
-$contact->setLastName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_last_name'), Utils::get_array_value($_POST, 'shipping_last_name')));
-$contact->setAddress1(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_address_1'), Utils::get_array_value($_POST, 'shipping_address_1')));
-$contact->setAddress2(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_address_2'), Utils::get_array_value($_POST, 'shipping_address_2')));
-$contact->setCompany(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_company'), Utils::get_array_value($_POST, 'shipping_company')));
-$contact->setCity(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_city'), Utils::get_array_value($_POST, 'shipping_city')));
-$contact->setPostalCode(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_zip'), Utils::get_array_value($_POST, 'shipping_zip')));
-$contact->setState(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_state'), Utils::get_array_value($_POST, 'shipping_state')));
-$contact->setCountry(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_country'), Utils::get_array_value($_POST, 'shipping_country')));
+$contact->setFirstName(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_first_name'), Utils::getArrayValue($_POST, 'shipping_first_name')));
+$contact->setLastName(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_last_name'), Utils::getArrayValue($_POST, 'shipping_last_name')));
+$contact->setAddress1(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_address_1'), Utils::getArrayValue($_POST, 'shipping_address_1')));
+$contact->setAddress2(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_address_2'), Utils::getArrayValue($_POST, 'shipping_address_2')));
+$contact->setCompany(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_company'), Utils::getArrayValue($_POST, 'shipping_company')));
+$contact->setCity(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_city'), Utils::getArrayValue($_POST, 'shipping_city')));
+$contact->setPostalCode(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_zip'), Utils::getArrayValue($_POST, 'shipping_zip')));
+$contact->setState(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_state'), Utils::getArrayValue($_POST, 'shipping_state')));
+$contact->setCountry(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_country'), Utils::getArrayValue($_POST, 'shipping_country')));
 
 $event->setContact($contact);
 

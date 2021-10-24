@@ -14,7 +14,7 @@ global $store_order;
  */
 
 // assuming you set order_id=123 to checkout_url when sending ATC event
-$order_id = Utils::get_array_value($_GET, 'order_hash');
+$order_id = Utils::getArrayValue($_GET, 'order_hash');
 
 // no id?
 if (empty($order_id)) {

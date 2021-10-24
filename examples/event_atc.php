@@ -24,37 +24,30 @@ $event = new AddToCartEvent();
 
 // contact section
 $contact = new Contact();
-$contact->setPhone(Utils::get_array_value($_POST, 'billing_phone'));
-$contact->setEmail(Utils::get_array_value($_POST, 'billing_email'));
-$contact->setAcceptsMarketing(Utils::get_array_value($_POST, 'accepts_marketing', false));
+$contact->setPhone(Utils::getArrayValue($_POST, 'billing_phone'));
+$contact->setEmail(Utils::getArrayValue($_POST, 'billing_email'));
+$contact->setAcceptsMarketing(Utils::getArrayValue($_POST, 'accepts_marketing', false));
 $contact->setIpAddress(FAKE_IP_ADDRESS); // you can skip this setter for auto IP detection
 
-$contact->setFirstName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_first_name'), Utils::get_array_value($_POST, 'shipping_first_name')));
-$contact->setLastName(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_last_name'), Utils::get_array_value($_POST, 'shipping_last_name')));
-$contact->setAddress1(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_address_1'), Utils::get_array_value($_POST, 'shipping_address_1')));
-$contact->setAddress2(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_address_2'), Utils::get_array_value($_POST, 'shipping_address_2')));
-$contact->setCompany(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_company'), Utils::get_array_value($_POST, 'shipping_company')));
-$contact->setCity(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_city'), Utils::get_array_value($_POST, 'shipping_city')));
-$contact->setPostalCode(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_zip'), Utils::get_array_value($_POST, 'shipping_zip')));
-$contact->setState(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_state'), Utils::get_array_value($_POST, 'shipping_state')));
-$contact->setCountry(Utils::get_first_non_empty_value(Utils::get_array_value($_POST, 'billing_country'), Utils::get_array_value($_POST, 'shipping_country')));
+$contact->setFirstName(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_first_name'), Utils::getArrayValue($_POST, 'shipping_first_name')));
+$contact->setLastName(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_last_name'), Utils::getArrayValue($_POST, 'shipping_last_name')));
+$contact->setAddress1(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_address_1'), Utils::getArrayValue($_POST, 'shipping_address_1')));
+$contact->setAddress2(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_address_2'), Utils::getArrayValue($_POST, 'shipping_address_2')));
+$contact->setCompany(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_company'), Utils::getArrayValue($_POST, 'shipping_company')));
+$contact->setCity(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_city'), Utils::getArrayValue($_POST, 'shipping_city')));
+$contact->setPostalCode(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_zip'), Utils::getArrayValue($_POST, 'shipping_zip')));
+$contact->setState(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_state'), Utils::getArrayValue($_POST, 'shipping_state')));
+$contact->setCountry(Utils::getFirstNonEmpty(Utils::getArrayValue($_POST, 'billing_country'), Utils::getArrayValue($_POST, 'shipping_country')));
 
 $event->setContact($contact);
 
 // order section
 $order = new Order();
-$order->setId(sha1($active_order['id']));
+$order->setId($active_order['id']); // order id, must be unique across all cart/orders in your database
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
-
-/*
- * Checkout url receives order identifier, which can be used to get actual order from your database.
- * Although the simplest way is to use order's primary id, it's not the safest way to do it.
- *
- * example: https://domain/cartboss/restore-cart.php?order_hash=sha1($order_id)
- */
-$order->setCheckoutUrl(Utils::getCurrentHost() . "/cart_restore.php?order_hash=" . sha1($active_order['id']));
+$order->setCheckoutUrl(Utils::getCurrentHost() . "/cart_restore.php?order_hash=" . sha1($active_order['id'])); // try not to use naked order id for restore url
 
 foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();

@@ -4,25 +4,20 @@ namespace CartBoss\Api;
 
 use Throwable;
 
-class Utils
-{
-    public static function getCurrentUrl(): string
-    {
+class Utils {
+    public static function getCurrentUrl(): string {
         return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     }
 
-    public static function getCurrentHost(): string
-    {
+    public static function getCurrentHost(): string {
         return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
     }
 
-    public static function getUserAgent()
-    {
-        return self::get_array_value($_SERVER, 'HTTP_USER_AGENT');
+    public static function getUserAgent() {
+        return self::getArrayValue($_SERVER, 'HTTP_USER_AGENT');
     }
 
-    public static function getIp()
-    {
+    public static function getIp() {
         foreach (
             array(
                 'HTTP_CF_CONNECTING_IP',
@@ -50,8 +45,7 @@ class Utils
         return null;
     }
 
-    public static function get_array_value($arr, $key, $default = null)
-    {
+    public static function getArrayValue($arr, $key, $default = null) {
         if (!is_array($arr)) {
             return $default;
         }
@@ -64,8 +58,7 @@ class Utils
         return $arr[$key];
     }
 
-    public static function get_first_non_empty_value()
-    {
+    public static function getFirstNonEmpty() {
         foreach (func_get_args() as $arg) {
             if (isset($arg) && !empty($arg)) {
                 return $arg;
@@ -75,13 +68,7 @@ class Utils
         return null;
     }
 
-    public static function is_true($val)
-    {
-        return filter_var($val, FILTER_VALIDATE_BOOLEAN);
-    }
-
-    public static function get_random_string($length = 32): ?string
-    {
+    public static function getRandomString($length = 32): ?string {
         try {
             return bin2hex(random_bytes($length / 2));
         } catch (Throwable $e) {
@@ -90,6 +77,14 @@ class Utils
             } catch (Throwable $e) {
                 return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
             }
+        }
+    }
+
+    public static function getHash($val) {
+        try {
+            return hash('sha3-256', $val);
+        } catch (Throwable $e) {
+            return sha1($val);
         }
     }
 }

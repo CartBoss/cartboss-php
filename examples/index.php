@@ -10,21 +10,21 @@ use CartBoss\Api\Utils;
 
 require __DIR__ . '/global.php';
 
-if (Utils::get_array_value($_GET, 'reset') === '1') {
+if (Utils::getArrayValue($_GET, 'reset') === '1') {
     CookieStorage::delete(COOKIE_CONTACT);
 
     header("Location: /");
     exit;
 }
 
-$generate = Utils::get_array_value($_GET, 'generate');
+$generate = Utils::getArrayValue($_GET, 'generate');
 if ($generate == 'attribution') {
-    header("Location: ?" . AttributionInterceptor::QUERY_VAR . "=" . Utils::get_random_string());
+    header("Location: ?" . AttributionInterceptor::QUERY_VAR . "=" . Utils::getRandomString());
     exit;
 
 } elseif ($generate == 'coupon') {
     $data = array(
-        CouponInterceptor::STRUCT_KEY_CODE => Utils::get_random_string(6),
+        CouponInterceptor::STRUCT_KEY_CODE => Utils::getRandomString(6),
         CouponInterceptor::STRUCT_KEY_TYPE => array_rand(array_flip(array(Coupon::TYPE_CUSTOM, Coupon::TYPE_FIXED_AMOUNT, Coupon::TYPE_FREE_SHIPPING, Coupon::TYPE_PERCENTAGE)), 1),
         CouponInterceptor::STRUCT_KEY_VALUE => rand(0, 100)
     );

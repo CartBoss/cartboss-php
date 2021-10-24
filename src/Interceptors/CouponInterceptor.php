@@ -21,13 +21,13 @@ class CouponInterceptor extends DecodeableInterceptor
 
         $this->coupon = new Coupon();
 
-        $query_val = Utils::get_array_value($_GET, static::QUERY_VAR, null);
+        $query_val = Utils::getArrayValue($_GET, static::QUERY_VAR, null);
         if (isset($query_val)) {
             $decoded_data = $this->decode($query_val);
             if (is_array($decoded_data)) {
-                $this->coupon->setCode(Utils::get_array_value($decoded_data, self::STRUCT_KEY_CODE));
-                $this->coupon->setType(Utils::get_array_value($decoded_data, self::STRUCT_KEY_TYPE));
-                $this->coupon->setValue(Utils::get_array_value($decoded_data, self::STRUCT_KEY_VALUE));
+                $this->coupon->setCode(Utils::getArrayValue($decoded_data, self::STRUCT_KEY_CODE));
+                $this->coupon->setType(Utils::getArrayValue($decoded_data, self::STRUCT_KEY_TYPE));
+                $this->coupon->setValue(Utils::getArrayValue($decoded_data, self::STRUCT_KEY_VALUE));
             }
         }
     }

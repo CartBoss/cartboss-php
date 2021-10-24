@@ -12,14 +12,14 @@ class Session
 
     public function __construct()
     {
-        $token = Utils::get_array_value($_GET, self::QUERY_VAR, null);
+        $token = Utils::getArrayValue($_GET, self::QUERY_VAR, null);
 
         if (!self::isValidToken($token)) {
             $token = CookieStorage::get(self::COOKIE_NAME, null);
         }
 
         if (!self::isValidToken($token)) {
-            $token = Utils::get_random_string(64);
+            $token = Utils::getRandomString(64);
         }
 
         CookieStorage::set(self::COOKIE_NAME, $token, 60 * 60 * 24 * 365);
