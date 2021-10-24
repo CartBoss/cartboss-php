@@ -13,32 +13,25 @@ global $store_order;
  * 2. Clicking SMS link will open the link in phone's default browser, which knows nothing about previous (Facebook) session.
  */
 
-// assuming you set order_id=123 to checkout_url when sending ATC event
-$order_id = Utils::getArrayValue($_GET, 'order_hash');
+// Step 1: Get provided order id from url
+$order_id = Utils::getArrayValue($_GET, 'order_id');
 
-// no id?
 if (empty($order_id)) {
     return "to home page";
 }
 
-// select order from your DB (be sure to prepare sql statement)
-// $order = "SELECT * FROM orders WHERE id = $order_id)
+// Step 2: Retrieve order/cart exists from your database
+// $order = "SELECT * FROM orders WHERE id = $order_id
 $order = $store_order;
 
-// doesn't exist?
+// Step 3: Check whether order exists
 if (!$order) {
     return "to home page";
 }
 
-// not abandoned?
-if ($order['state'] != 'abandoned') {
+// Step 4: Check whether order is still in abandoned state
+if ($order['state'] !== 'abandoned') {
     return "to home page";
 }
 
-// depending on your business logic, link order to visitors browser session
-$_SESSION['order_id'] = $order['id'];
-
-// redirect to checkout
-header('Location: /index.php');
-die();
-
+// Step 5: Restore visitor's session and redirect to checkout

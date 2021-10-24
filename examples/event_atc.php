@@ -47,7 +47,7 @@ $order->setId($active_order['id']); // order id, must be unique across all cart/
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
-$order->setCheckoutUrl(Utils::getCurrentHost() . "/cart_restore.php?order_hash=" . sha1($active_order['id'])); // try not to use naked order id for restore url
+$order->setCheckoutUrl(Utils::getCurrentHost() . "/cart_restore.php?order_id=" . $active_order['id']); // you might want to replace naked order id with a hashed version
 
 foreach ($active_order['cart_items'] as $obj) {
     $cart_item = new CartItem();
