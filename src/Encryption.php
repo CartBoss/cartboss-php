@@ -27,7 +27,7 @@ class Encryption
         }
     }
 
-    public static function decrypt(string $secret, string $input)
+    public static function decrypt(string $secret, ?string $input)
     {
         try {
             $input = base64_decode($input);

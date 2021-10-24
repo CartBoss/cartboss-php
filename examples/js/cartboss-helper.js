@@ -1,8 +1,9 @@
 (function ($) {
     var cbDebug = true, // disable in production
-        cbATCEventHandlerUrl = 'event_atc.php'; // path to script that generates add to cart event
+        cbATCEventHandlerUrl = 'event_atc.php', // path to script that generates add to cart event
+        cbApiTimeout = 10000;
 
-    // replace selectors with your own
+    // customize ajax:selector mapping
     var cbInputFields = {
         billing_phone: '#billing_phone',
         billing_email: '#billing_email',
@@ -75,7 +76,7 @@
                             cache: false,
                             async: true,
                             global: false,
-                            timeout: 10000,
+                            timeout: cbApiTimeout,
                             beforeSend: function (xhr) {
                                 self.isSendingInProgress = true;
                                 self.stateData = null;

@@ -8,74 +8,61 @@ use CartBoss\Api\Interceptors\AttributionInterceptor;
 use CartBoss\Api\Interceptors\ContactInterceptor;
 use CartBoss\Api\Interceptors\CouponInterceptor;
 use CartBoss\Api\Managers\ApiClient;
-use CartBoss\Api\Managers\Session;
 use CartBoss\Api\Resources\Events\BaseEvent;
 use CartBoss\Api\Resources\Events\OrderBaseEvent;
-use CartBoss\Api\Resources\Events\PurchaseEvent;
 use Rakit\Validation\Validator;
 use stdClass;
 
 define('CARTBOSS_PATH', dirname(__FILE__));
 define('CARTBOSS_VERSION', '2.0.0');
 
-class CartBoss
-{
+class CartBoss {
     /**
      * @var string
      */
     private $api_key;
+    /**
+     * @var bool
+     */
     private $debug;
+    /**
+     * @var null
+     */
     private $timeout = null;
+    /**
+     * @var null
+     */
     private $connect_timeout = null;
 
-    /**
-     * @var Session
-     */
-    private $session;
-
-    public function __construct(string $api_key, bool $debug = false)
-    {
+    public function __construct(string $api_key, bool $debug = false) {
         $this->api_key = $api_key;
         $this->debug = $debug;
-        $this->session = new Session();
     }
 
-    public function setTimeout(int $timeout, int $connect_timeout)
-    {
+    public function setTimeout(int $timeout, int $connect_timeout) {
         $this->timeout = $timeout;
         $this->connect_timeout = $connect_timeout;
     }
 
-    public function onAttributionIntercepted($func)
-    {
+    public function onAttributionIntercepted($func) {
         $interceptor = new AttributionInterceptor();
         if ($interceptor->getAttribution()->isValid()) {
             $func($interceptor->getAttribution());
         }
     }
 
-    public function onCouponIntercepted($func)
-    {
+    public function onCouponIntercepted($func) {
         $interceptor = new CouponInterceptor($this->api_key);
         if ($interceptor->getCoupon()->isValid()) {
             $func($interceptor->getCoupon());
         }
     }
 
-    public function onContactIntercepted($func)
-    {
+    public function onContactIntercepted($func) {
         $interceptor = new ContactInterceptor($this->api_key);
         if ($interceptor->getContact()->isValid()) {
             $func($interceptor->getContact());
         }
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSessionToken(): string
-    {
-        return $this->session->getToken();
     }
 
     /**
@@ -84,20 +71,8 @@ class CartBoss
      * @throws ApiException
      * @throws EventValidationException
      */
-    public function sendOrderEvent(OrderBaseEvent $event): ?stdClass
-    {
-        // if order nonce has NOT been set by developer
-        if (empty($event->getOrder()->getId()) && !empty($this->session->getToken())) {
-            $event->getOrder()->setId($this->session->getToken());
-        }
-
-        $response = $this->sendEvent($event);
-
-        if ($event->getEventName() == PurchaseEvent::EVENT_NAME) {
-            $this->session->reset();
-        }
-
-        return $response;
+    public function sendOrderEvent(OrderBaseEvent $event): ?stdClass {
+        return $this->sendEvent($event);
     }
 
     /**
@@ -106,8 +81,7 @@ class CartBoss
      * @throws EventValidationException
      * @throws ApiException
      */
-    public function sendEvent(BaseEvent $event): ?stdClass
-    {
+    public function sendEvent(BaseEvent $event): ?stdClass {
         // validate event before sending
         $validator = new Validator();
         $validation = $validator->make($event->getPayload(), $event->getRules());
@@ -133,18 +107,8 @@ class CartBoss
      * @return stdClass|null
      * @throws ApiException
      */
-    private function getOrder(string $order_id): ?stdClass
-    {
+    private function getOrder(string $order_id): ?stdClass {
         $client = new ApiClient($this->api_key, $this->timeout, $this->connect_timeout);
         return $client->performHttpCall(ApiClient::HTTP_GET, "orders/{$order_id}");
-    }
-
-    /**
-     * @param mixed $token
-     * @return bool
-     */
-    private function isValidOrderNonce($nonce): bool
-    {
-        return !is_null($nonce) && 1 === preg_match("/^[a-zA-Z0-9]+$/i", $nonce);
     }
 }

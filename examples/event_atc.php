@@ -9,9 +9,9 @@ use CartBoss\Api\Resources\Order;
 use CartBoss\Api\Utils;
 
 require_once __DIR__ . '/global.php';
-global $cartboss, $my_order;
+global $cartboss, $store_order;
 
-$active_order = $my_order;
+$active_order = $store_order;
 
 // test order depending on your business logic
 if (!$active_order || $active_order['state'] != 'abandoned') {
@@ -70,8 +70,14 @@ foreach ($active_order['cart_items'] as $obj) {
 $event->setOrder($order);
 
 try {
+    // debug
+    var_dump($event->getPayload());
+
+    // send event to CartBoss API
     $cartboss->sendOrderEvent($event);
     echo "event {$event->getEventName()} successfully sent";
+
+
 
 } catch (EventValidationException $e) {
     echo "<h1>Event validation failed</h1>";
@@ -81,3 +87,4 @@ try {
     echo "<h1>Api failed</h1>";
     var_dump($e->getMessage());
 }
+

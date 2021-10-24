@@ -4,13 +4,16 @@ use CartBoss\Api\Exceptions\ApiException;
 use CartBoss\Api\Exceptions\EventValidationException;
 use CartBoss\Api\Resources\CartItem;
 use CartBoss\Api\Resources\Contact;
+use CartBoss\Api\Resources\Events\PurchaseEvent;
 use CartBoss\Api\Resources\Order;
+use CartBoss\Api\Storage\ContextStorage;
+use CartBoss\Api\Storage\CookieStorage;
 use CartBoss\Api\Utils;
 
 require_once __DIR__ . '/global.php';
-global $cartboss, $my_order;
+global $cartboss, $store_order;
 
-$active_order = $my_order;
+$active_order = $store_order;
 
 // test order depending on your business logic
 if (!$active_order || $active_order['state'] != 'abandoned') {
@@ -19,12 +22,11 @@ if (!$active_order || $active_order['state'] != 'abandoned') {
 }
 
 // create ATC event
-$event = new \CartBoss\Api\Resources\Events\PurchaseEvent();
+$event = new PurchaseEvent();
 
 // attach attribution token (if available for this order)
-$attribution_token = null;
-$attribution_token = \CartBoss\Api\Storage\CookieStorage::get(ATTRIBUTION_TOKEN, null);
-// $attribution_token = SELECT cb_attribution_token FROM orders WHERE order_id = $_SESSION['order_id']
+$attribution_token = CookieStorage::get(COOKIE_ATTRIBUTION_TOKEN, null); // when sending from frontend (ie; browser)
+// $attribution_token = SELECT cb_attribution_token FROM orders WHERE order_id = $_SESSION['order_id'] // when sending from backend (ie; cron)
 $event->setAttributionToken($attribution_token);
 
 // contact section
@@ -48,7 +50,7 @@ $event->setContact($contact);
 
 // order section
 $order = new Order();
-$order->setId($cartboss->getSessionToken());
+$order->setId(sha1($active_order['id']));
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
@@ -68,19 +70,20 @@ foreach ($active_order['cart_items'] as $obj) {
 $event->setOrder($order);
 
 try {
+    // debug
+    ContextStorage::set(TMPL_EVENT_PAYLOAD, $event->getPayload());
+
     // send event to CartBoss API
     $cartboss->sendOrderEvent($event);
-
     echo "event {$event->getEventName()} successfully sent";
 
-    // debug
-    var_dump($event->getPayload());
-
 } catch (EventValidationException $e) {
-    echo "<h1>Event validation failed</h1>";
-    var_dump($e->getMessage());
+    // debug
+    ContextStorage::set(TMPL_EVENT_ERROR, $e->getMessage());
 
 } catch (ApiException $e) {
-    echo "<h1>Api failed</h1>";
-    var_dump($e->getMessage());
+    // debug
+    ContextStorage::set(TMPL_EVENT_ERROR, $e->getMessage());
 }
+
+display("templates/confirmation.php");
