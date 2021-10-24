@@ -5,14 +5,6 @@ use CartBoss\Api\Utils;
 require_once __DIR__ . '/global.php';
 global $store_order;
 
-/*
- * This script will restore abandoned cart and attach it to new browser's session.
- *
- * Keep in mind:
- * 1. Browsers do not share cookie storage. For example, user will abandon cart within Facebook app.
- * 2. Clicking SMS link will open the link in phone's default browser, which knows nothing about previous (Facebook) session.
- */
-
 // Step 1: Get provided order id from url
 $order_id = Utils::getArrayValue($_GET, 'order_id');
 

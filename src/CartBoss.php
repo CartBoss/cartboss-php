@@ -91,7 +91,6 @@ class CartBoss {
         if ($validation->fails()) {
             if ($this->debug) {
                 error_log(print_r($validation->errors()->all(), true));
-                error_log(print_r($event->getPayload(), true));
             }
 
             throw new EventValidationException(print_r($validation->errors()->all(), true));

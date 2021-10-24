@@ -56,28 +56,6 @@ class Coupon implements PayloadInterface {
         return $this->type == self::TYPE_FREE_SHIPPING;
     }
 
-    public function isValid(): bool {
-        $validator = new Validator;
-        $validation = $validator->validate(array(
-            'code' => $this->code,
-            'type' => $this->type,
-            'value' => $this->value,
-        ), [
-            'code' => 'required',
-            'type' => "required|in:FIXED_AMOUNT,PERCENTAGE,FREE_SHIPPING,CUSTOM",
-        ]);
-
-        return !$validation->fails();
-    }
-
-    public function getPayload(): array {
-        return array(
-            self::CODE => $this->getCode(),
-            self::TYPE => $this->getType(),
-            self::VALUE => $this->getValue(),
-        );
-    }
-
     /**
      * @return string|null
      */
@@ -118,6 +96,34 @@ class Coupon implements PayloadInterface {
      */
     public function setValue(?string $value): void {
         $this->value = trim($value);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValid(): bool {
+        $validator = new Validator;
+        $validation = $validator->validate(array(
+            'code' => $this->code,
+            'type' => $this->type,
+            'value' => $this->value,
+        ), [
+            'code' => 'required',
+            'type' => 'required|in:FIXED_AMOUNT,PERCENTAGE,FREE_SHIPPING,CUSTOM',
+        ]);
+
+        return !$validation->fails();
+    }
+
+    /**
+     * @return array
+     */
+    public function getPayload(): array {
+        return array(
+            self::CODE => $this->getCode(),
+            self::TYPE => $this->getType(),
+            self::VALUE => $this->getValue(),
+        );
     }
 
     public function __toString() {

@@ -20,11 +20,6 @@ class Contact extends BillingAddress {
      */
     private $accepts_marketing = false;
 
-    public function __construct() {
-        $this->ip_address = Utils::getIp();
-        $this->user_agent = Utils::getUserAgent();
-    }
-
     public function getPayload(): array {
         return array_merge(parent::getPayload(), array(
             'ip_address' => $this->getIpAddress(),
@@ -37,7 +32,7 @@ class Contact extends BillingAddress {
      * @return string|null
      */
     public function getIpAddress(): ?string {
-        return $this->ip_address;
+        return $this->ip_address ?? Utils::getIp();
     }
 
     /**
@@ -51,7 +46,14 @@ class Contact extends BillingAddress {
      * @return string|null
      */
     public function getUserAgent(): ?string {
-        return $this->user_agent;
+        return $this->user_agent ?? Utils::getUserAgent();
+    }
+
+    /**
+     * @param string|null $user_agent
+     */
+    public function setUserAgent(?string $user_agent): void {
+        $this->user_agent = $user_agent;
     }
 
     /**

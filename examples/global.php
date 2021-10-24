@@ -149,3 +149,4 @@ $cartboss->onContactIntercepted(function(Contact $contact) {
 
     // Step 4: use this info at checkout display (see checkout.php)
 });
+
