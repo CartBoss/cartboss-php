@@ -71,7 +71,6 @@ try {
     echo "event {$event->getEventName()} successfully sent";
 
 
-
 } catch (EventValidationException $e) {
     echo "<h1>Event validation failed</h1>";
     var_dump($e->getMessage());

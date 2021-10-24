@@ -1,6 +1,5 @@
 <?php
-function template($file, $args)
-{
+function template($file, $args) {
     // ensure the file exists
     if (!file_exists($file)) {
         return '';
@@ -17,8 +16,7 @@ function template($file, $args)
     return ob_get_clean();
 }
 
-function function_get_output($fn)
-{
+function function_get_output($fn) {
     $args = func_get_args();
     unset($args[0]);
     ob_start();
@@ -28,13 +26,11 @@ function function_get_output($fn)
     return $output;
 }
 
-function display($template, $params = array())
-{
+function display($template, $params = array()) {
     extract($params);
     include $template;
 }
 
-function render($template, $params = array())
-{
+function render($template, $params = array()) {
     return function_get_output('display', $template, $params);
 }

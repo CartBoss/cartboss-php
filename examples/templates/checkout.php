@@ -1,11 +1,10 @@
 <?php
 
-use CartBoss\Api\Storage\ContextStorage;
-
-
 use CartBoss\Api\Encryption;
+use CartBoss\Api\Storage\ContextStorage;
 use CartBoss\Api\Storage\CookieStorage;
 use CartBoss\Api\Utils;
+
 
 $encrypted_contact_data = CookieStorage::get(COOKIE_CONTACT);
 $contact_array = Encryption::decrypt(CB_API_KEY, $encrypted_contact_data);
@@ -50,7 +49,7 @@ $contact_array = Encryption::decrypt(CB_API_KEY, $encrypted_contact_data);
         <div class="mb-1">
             <label for="billing_phone" class="form-label">Phone number *</label>
             <input autocomplete="off" class="required form-control" id="billing_phone" name="billing_phone"
-                   required="required" type="tel" value="<?php echo Utils::getArrayValue($contact_array, 'phone')?>">
+                   required="required" type="tel" value="<?php echo Utils::getArrayValue($contact_array, 'phone') ?>">
         </div>
 
         <div class="form-check">
@@ -63,49 +62,49 @@ $contact_array = Encryption::decrypt(CB_API_KEY, $encrypted_contact_data);
         <div class="mb-1">
             <label for="billing_first_name" class="form-label">First name</label>
             <input autocomplete="off" class="required form-control" id="billing_first_name" name="billing_first_name"
-                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'first_name')?>">
+                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'first_name') ?>">
         </div>
 
         <div class="mb-1">
             <label for="billing_last_name" class="form-label">Last name</label>
             <input autocomplete="off" class="required form-control" id="billing_last_name" name="billing_last_name"
-                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'last_name')?>">
+                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'last_name') ?>">
         </div>
 
         <div class="mb-1">
             <label for="billing_company" class="form-label">Company</label>
             <input autocomplete="off" class="required form-control" id="billing_company" name="billing_company"
-                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'company')?>">
+                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'company') ?>">
         </div>
 
         <div class="mb-1">
             <label for="billing_address_1" class="form-label">Address 1</label>
             <input autocomplete="off" class="required form-control" id="billing_address_1" name="billing_address_1"
-                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'address_1')?>">
+                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'address_1') ?>">
         </div>
 
         <div class="mb-1">
             <label for="billing_address_2" class="form-label">Address 2</label>
             <input autocomplete="off" class="required form-control" id="billing_address_2" name="billing_address_2"
-                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'address_2')?>">
+                   type="text" value="<?php echo Utils::getArrayValue($contact_array, 'address_2') ?>">
         </div>
 
         <div class="mb-1">
             <label for="billing_city" class="form-label">City</label>
             <input autocomplete="off" class="required form-control" id="billing_city" name="billing_city" type="text"
-                   value="<?php echo Utils::getArrayValue($contact_array, 'city')?>">
+                   value="<?php echo Utils::getArrayValue($contact_array, 'city') ?>">
         </div>
 
         <div class="mb-1">
             <label for="billing_zip" class="form-label">ZIP</label>
             <input autocomplete="off" class="required form-control" id="billing_zip" name="billing_zip" type="text"
-                   value="<?php echo Utils::getArrayValue($contact_array, 'postal_code')?>">
+                   value="<?php echo Utils::getArrayValue($contact_array, 'postal_code') ?>">
         </div>
 
         <div class="mb-1">
             <label for="billing_state" class="form-label">State</label>
             <input autocomplete="off" class="required form-control" id="billing_state" name="billing_state" type="text"
-                   value="<?php echo Utils::getArrayValue($contact_array, 'state')?>">
+                   value="<?php echo Utils::getArrayValue($contact_array, 'state') ?>">
         </div>
 
         <div class="mb-1">
