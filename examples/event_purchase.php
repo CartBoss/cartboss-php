@@ -50,7 +50,7 @@ $event->setContact($contact);
 
 // order section
 $order = new Order();
-$order->setId(sha1($active_order['id']));
+$order->setId($active_order['id']);
 $order->setValue($active_order['value']); // total order value
 $order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
@@ -73,11 +73,11 @@ try {
     // debug
     ContextStorage::set(TMPL_EVENT_PAYLOAD, $event->getPayload());
 
-    // send event to CartBoss API
+    // Step 1: send event to CartBoss API
     $cartboss->sendOrderEvent($event);
     echo "event {$event->getEventName()} successfully sent";
 
-    // clear attribution token cookie
+    // Step 2: clear attribution token cookie
     CookieStorage::delete(COOKIE_ATTRIBUTION_TOKEN);
 
 } catch (EventValidationException $e) {

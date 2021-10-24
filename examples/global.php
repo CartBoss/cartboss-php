@@ -18,8 +18,8 @@ require __DIR__ . '/utils.php';
 /*
  * Your CartBoss API key.
  *
- * Each domain requires unique API key. You can create one at https://app.cartboss.io/sites
- *
+ * Each domain requires its unique API key. You can create one at https://app.cartboss.io/sites
+ * You can also use a service such as https://ngrok.com/. It allows you to create a tunnel from a public host to your local host to facilitate the process of testing and implementation.
  *
  */
 const CB_API_KEY = '1111111111111111111111111111111111111111111111111111111111111111';
@@ -43,7 +43,7 @@ const COOKIE_CONTACT = 'contact';
  * This variable represents a mocked up object of visitor's active cart/order record/table/...
  */
 $store_order = array(
-    'id' => '1', // Database id (primary key for example)
+    'id' => '1', // DB primary key
     'value' => 40.0,
     'currency' => 'EUR',
     'state' => 'abandoned',
@@ -100,9 +100,9 @@ $cartboss->onAttributionIntercepted(function(Attribution $attribution) {
     // Step 1: Store attribution token to browser's cookie for 30 days
     CookieStorage::set(COOKIE_ATTRIBUTION_TOKEN, $attribution->getToken(), 60 * 60 * 24 * 30);
 
-    // Step 2: Attach attribution token to a purchase event (see event_purchase.php)
+    // Step 2 @ event_purchase.php: Attach attribution token to a purchase event (see event_purchase.php)
 
-    // Step 3: If event succeeded, clear token cookie
+    // Step 3 @ event_purchase.php: If event succeeded, clear token cookie
 
 });
 
