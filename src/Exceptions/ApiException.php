@@ -89,7 +89,7 @@ class ApiException extends Exception
         $object = @json_decode($body);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new self("Unable to decode Mollie response: '{$body}'.");
+            throw new self("Unable to decode CartBoss response: '{$body}'.");
         }
 
         return $object;
