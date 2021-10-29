@@ -12,8 +12,6 @@
     "composer/ca-bundle": "^1.2",
     "delight-im/cookie": "^3.4",
     "guzzlehttp/guzzle": "^7.3",
-    "league/uri": "^6.5",
-    "league/uri-components": "^2.4",
     "rakit/validation": "^1.4"
   },
   "config": {

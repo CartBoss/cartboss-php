@@ -14,6 +14,7 @@ if (empty($order_id)) {
 
 // Step 2: Retrieve order/cart exists from your database
 // $order = "SELECT * FROM orders WHERE id = $order_id
+// pro-tip; it's recommended to pass hashed order_id to checkout_url and retrieve iz from local DB by hash itself
 $order = $store_order;
 
 // Step 3: Check whether order exists

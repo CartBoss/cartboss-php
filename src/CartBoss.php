@@ -14,7 +14,7 @@ use Rakit\Validation\Validator;
 use stdClass;
 
 define('CARTBOSS_PATH', dirname(__FILE__));
-define('CARTBOSS_VERSION', '2.0.0');
+define('CARTBOSS_VERSION', '2.0.1');
 
 class CartBoss {
     /**

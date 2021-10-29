@@ -2,14 +2,12 @@
 
 namespace CartBoss\Api\Resources;
 
-use CartBoss\Api\Managers\Session;
 use CartBoss\Api\Resources\Addresses\BillingAddress;
 use CartBoss\Api\Resources\Addresses\ShippingAddress;
 use CartBoss\Api\Utils;
-use League\Uri\Uri;
-use League\Uri\UriModifier;
 
 class Order {
+
     /**
      * @var string|null
      */
@@ -144,9 +142,9 @@ class Order {
     }
 
     /**
-     * @param string|null $id
+     * @param string $id
      */
-    public function setId(?string $id): void {
+    public function setId(string $id): void {
         $this->id = Utils::getHash($id);
     }
 
@@ -210,13 +208,7 @@ class Order {
      * @return string|null
      */
     public function getCheckoutUrl(): ?string {
-        if (!empty($this->checkout_url)) {
-            $checkout_url = Uri::createFromString($this->checkout_url);
-            $checkout_url = UriModifier::appendQuery($checkout_url, Session::QUERY_VAR . '=' . $this->getId());
-            return $checkout_url->jsonSerialize();
-        } else {
-            return null;
-        }
+        return $this->checkout_url;
     }
 
     /**
