@@ -14,7 +14,7 @@ use Rakit\Validation\Validator;
 use stdClass;
 
 define('CARTBOSS_PATH', dirname(__FILE__));
-define('CARTBOSS_VERSION', '2.0.1');
+define('CARTBOSS_VERSION', '2.0.2');
 
 class CartBoss {
     /**
@@ -109,5 +109,13 @@ class CartBoss {
     private function getOrder(string $order_id): ?stdClass {
         $client = new ApiClient($this->api_key, $this->timeout, $this->connect_timeout);
         return $client->performHttpCall(ApiClient::HTTP_GET, "orders/{$order_id}");
+    }
+
+    /**
+     * @throws ApiException
+     */
+    function ping(): ?stdClass {
+        $client = new ApiClient($this->api_key, $this->timeout, $this->connect_timeout);
+        return $client->performHttpCall(ApiClient::HTTP_POST, "ping");
     }
 }
