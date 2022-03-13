@@ -58,6 +58,9 @@ class CartBoss {
         }
     }
 
+    /**
+     * @deprecated deprecated since version 2.1
+     */
     public function onContactIntercepted($func) {
         $interceptor = new ContactInterceptor($this->api_key);
         if ($interceptor->getContact()->isValid()) {
@@ -99,16 +102,6 @@ class CartBoss {
         // send it to CartBoss
         $client = new ApiClient($this->api_key, $this->timeout, $this->connect_timeout);
         return $client->performHttpCall(ApiClient::HTTP_POST, 'track', $client->parseRequestBody($event->getPayload()));
-    }
-
-    /**
-     * @param string $order_id
-     * @return stdClass|null
-     * @throws ApiException
-     */
-    private function getOrder(string $order_id): ?stdClass {
-        $client = new ApiClient($this->api_key, $this->timeout, $this->connect_timeout);
-        return $client->performHttpCall(ApiClient::HTTP_GET, "orders/{$order_id}");
     }
 
     /**
