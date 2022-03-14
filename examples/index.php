@@ -33,7 +33,28 @@ if ($generate == 'attribution') {
 
     header("Location: ?" . CouponInterceptor::QUERY_VAR . "=" . $encoded);
     exit;
+
+} elseif ($generate == 'contact') {
+    $data = array(
+        ContactInterceptor::STRUCT_KEY_PHONE => '01234567891',
+        ContactInterceptor::STRUCT_KEY_EMAIL => 'test@example.com',
+        ContactInterceptor::STRUCT_KEY_FIRST_NAME => 'Mike',
+        ContactInterceptor::STRUCT_KEY_LAST_NAME => 'Boss',
+        ContactInterceptor::STRUCT_KEY_ADDRESS_1 => 'Some street ',
+        ContactInterceptor::STRUCT_KEY_ADDRESS_2 => 'Block 3',
+        ContactInterceptor::STRUCT_KEY_COMPANY => 'CartBoss Ltd.',
+        ContactInterceptor::STRUCT_KEY_CITY => 'Boss town',
+        ContactInterceptor::STRUCT_KEY_STATE => 'AE',
+        ContactInterceptor::STRUCT_KEY_POSTAL_CODE => '123456',
+        ContactInterceptor::STRUCT_KEY_COUNTRY => 'SI',
+    );
+
+    $encoded = Encryption::encrypt(CB_API_KEY, $data);
+
+    header("Location: ?" . ContactInterceptor::QUERY_VAR . "=" . $encoded);
+    exit;
 }
+
 
 display("templates/checkout.php");
 

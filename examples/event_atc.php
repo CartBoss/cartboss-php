@@ -44,8 +44,8 @@ $event->setContact($contact);
 // order section
 $order = new Order();
 $order->setId($active_order['id']); // order id, must be unique across all cart/orders in your database
-$order->setValue($active_order['value']); // total order value (29.99)
-$order->setCurrency($active_order['currency']); // order currency (EUR)
+$order->setValue($active_order['value']); // total order value
+$order->setCurrency($active_order['currency']); // order currency
 $order->setIsCod($active_order['method'] == 'COD');
 
 $order->setCheckoutUrl(Utils::getCurrentHost() . "/cart_restore.php?order_id=" . $active_order['id']); // you might want to replace naked order id with a hashed version

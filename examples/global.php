@@ -1,7 +1,9 @@
 <?php
 
 use CartBoss\Api\CartBoss;
+use CartBoss\Api\Encryption;
 use CartBoss\Api\Resources\Attribution;
+use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Resources\Coupon;
 use CartBoss\Api\Storage\ContextStorage;
 use CartBoss\Api\Storage\CookieStorage;
@@ -12,9 +14,6 @@ require_once __DIR__ . '/../cartboss-php.php';
 
 // include example helper methods
 require __DIR__ . '/utils.php';
-
-// include mocked database tables
-require __DIR__ . '/db.php';
 
 /*
  * Your CartBoss API key.
@@ -31,19 +30,67 @@ const FAKE_IP_ADDRESS = '127.0.0.1';
 // template var keys (only for this example needs)
 const TMPL_ATTRIBUTION_TOKEN = 'TMPL_ATTRIBUTION_TOKEN';
 const TMPL_COUPON = 'TMPL_COUPON';
+const TMPL_CONTACT = 'TMPL_CONTACT';
 const TMPL_EVENT_PAYLOAD = 'TMPL_EVENT_PAYLOAD';
 const TMPL_EVENT_ERROR = 'TMPL_EVENT_ERROR';
 
 const COOKIE_ATTRIBUTION_TOKEN = 'attribution_token';
 const COOKIE_CONTACT = 'contact';
 
+/*
+ * Sample order/cart data
+ *
+ * This variable represents a mocked up object of visitor's active cart/order record/table/...
+ */
+$store_order = array(
+    'id' => '1', // DB primary key
+    'value' => 40.0,
+    'currency' => 'EUR',
+    'state' => 'abandoned',
+    'number' => '#12345',
+    'method' => 'COD',
+    'cart_items' => array(
+        array(
+            'id' => 'P1',
+            'variation_id' => 'P1V3',
+            'name' => 'Product 1',
+            'price' => 10.0,
+            'quantity' => 2,
+        ),
+        array(
+            'id' => 'P2',
+            'variation_id' => null,
+            'name' => 'Product 2',
+            'price' => 20.0,
+            'quantity' => 1,
+        )
+    ),
+    // ...
+);
 
+/*
+ * Sample store coupon table
+ */
+$store_coupons = array(
+    array(
+        'id' => '1',
+        'code' => 'CART20OFF',
+        'type' => 'percentage',
+        'value' => 20
+    ),
+    array(
+        'id' => '2',
+        'code' => 'vipxxl',
+        'type' => 'percentage',
+        'value' => 50
+    ),
+);
 
 $cartboss = new CartBoss(CB_API_KEY, true);
 
 /*
- * CartBoss attribution token is a 64char string, injected into all SMS urls by CartBoss platform.
- * Your goal is to parse and attach it to a PurchaseEvent when sent back to CartBoss platform.
+ * CartBoss attribution token is a hash string, injected into all SMS urls by CartBoss platform.
+ * Your objective is to parse and attach it to a PurchaseEvent when sent back to CartBoss platform.
  * If you omit using attribution token, CartBoss statistics will not work correctly.
  */
 $cartboss->onAttributionIntercepted(function(Attribution $attribution) {
@@ -74,11 +121,32 @@ $cartboss->onCouponIntercepted(function(Coupon $coupon) {
         // pro-tip: clean CartBoss-generated coupons regularly with a custom cron job every 24 hrs
     }
 
-    // Step 3: Check if store_order doesn't already use this coupon
+    // Step 3: Check if store_order doesn't already use the coupon
     if (Utils::getArrayValue($store_order, 'coupon_code') != $coupon->getCode()) {
         // Step 4: attach it to your order/cart DB/session record
         $store_order['coupon_code'] = $coupon->getCode();
         // ...
     }
+});
+
+/*
+ * Contact is an object that holds information like: first_name, phone, etc.
+ * Contact info is injected into all urls that point to your website.
+ * You can use this info to re-populate billing address, whenever person visits your store through SMS
+ */
+$cartboss->onContactIntercepted(function(Contact $contact) {
+    // Debug: Store it to ContextStorage and display in checkout html
+    ContextStorage::set(TMPL_CONTACT, $contact->getPayload());
+
+    // Step 1: convert contact to assoc array
+    $contact_array = $contact->getPayload();
+
+    // Step 2: encrypt data
+    $encrypted_contact_string = Encryption::encrypt(CB_API_KEY, $contact_array);
+
+    // Step 3: store encrypted data to cookie for 1 year
+    CookieStorage::set(COOKIE_CONTACT, $encrypted_contact_string, 60 * 60 * 24 * 365);
+
+    // Step 4: use this info at checkout display (see checkout.php)
 });
 

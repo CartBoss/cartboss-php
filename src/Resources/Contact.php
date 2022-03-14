@@ -6,7 +6,6 @@ use CartBoss\Api\Resources\Addresses\BillingAddress;
 use CartBoss\Api\Utils;
 use Rakit\Validation\Validator;
 
-
 class Contact extends BillingAddress {
     /**
      * @var string|null

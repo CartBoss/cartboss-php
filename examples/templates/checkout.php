@@ -37,6 +37,9 @@ $contact_array = Encryption::decrypt(CB_API_KEY, $encrypted_contact_data);
 
         <h5>Coupon <a href="?generate=coupon" class="btn btn-sm btn-link">Sample injection</a></h5>
         <pre><?php print_r(ContextStorage::get(TMPL_COUPON)); ?></pre>
+
+        <h5>Contact <a href="?generate=contact" class="btn btn-sm btn-link">Sample injection</a></h5>
+        <pre><?php print_r(ContextStorage::get(TMPL_CONTACT)); ?></pre>
     </div>
 
     <hr>
