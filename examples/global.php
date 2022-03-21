@@ -1,9 +1,7 @@
 <?php
 
 use CartBoss\Api\CartBoss;
-use CartBoss\Api\Encryption;
 use CartBoss\Api\Resources\Attribution;
-use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Resources\Coupon;
 use CartBoss\Api\Storage\ContextStorage;
 use CartBoss\Api\Storage\CookieStorage;
@@ -128,25 +126,3 @@ $cartboss->onCouponIntercepted(function(Coupon $coupon) {
         // ...
     }
 });
-
-/*
- * Contact is an object that holds information like: first_name, phone, etc.
- * Contact info is injected into all urls that point to your website.
- * You can use this info to re-populate billing address, whenever person visits your store through SMS
- */
-$cartboss->onContactIntercepted(function(Contact $contact) {
-    // Debug: Store it to ContextStorage and display in checkout html
-    ContextStorage::set(TMPL_CONTACT, $contact->getPayload());
-
-    // Step 1: convert contact to assoc array
-    $contact_array = $contact->getPayload();
-
-    // Step 2: encrypt data
-    $encrypted_contact_string = Encryption::encrypt(CB_API_KEY, $contact_array);
-
-    // Step 3: store encrypted data to cookie for 1 year
-    CookieStorage::set(COOKIE_CONTACT, $encrypted_contact_string, 60 * 60 * 24 * 365);
-
-    // Step 4: use this info at checkout display (see checkout.php)
-});
-

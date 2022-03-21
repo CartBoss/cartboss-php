@@ -5,6 +5,9 @@ namespace CartBoss\Api\Interceptors;
 use CartBoss\Api\Resources\Contact;
 use CartBoss\Api\Utils;
 
+/**
+ * @deprecated deprecated since 2.0.3
+ */
 class ContactInterceptor extends DecodableInterceptor {
     const QUERY_VAR = "cb__contact";
 

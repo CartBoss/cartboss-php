@@ -1,7 +1,8 @@
 (function ($) {
-    var cbDebug = true, // disable in production
+    var cbDebug = false, // disable in production
         cbATCEventHandlerUrl = 'event_atc.php', // path to script that generates add to cart event
-        cbApiTimeout = 10000;
+        cbApiTimeout = 10000,
+        cbSendDelay = 1500;
 
     // customize ajax:selector mapping
     var cbInputFields = {
@@ -46,7 +47,7 @@
                 clearTimeout(this.tid);
 
                 this.stateData = data;
-                this._send(1000);
+                this._send(cbSendDelay);
             },
 
             onEdit: function () {
@@ -54,7 +55,7 @@
                 cbDebug && console.log("CartBoss", "🛑 Edit detected");
 
                 if (this.stateData) {
-                    this._send(1500);
+                    this._send(cbSendDelay);
                 }
             },
 

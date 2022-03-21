@@ -14,7 +14,7 @@ use Rakit\Validation\Validator;
 use stdClass;
 
 define('CARTBOSS_PATH', dirname(__FILE__));
-define('CARTBOSS_VERSION', '2.0.2');
+define('CARTBOSS_VERSION', '2.0.3');
 
 class CartBoss {
     /**
@@ -58,6 +58,11 @@ class CartBoss {
         }
     }
 
+    /**
+     * @deprecated deprecated since 2.0.3
+     * @param $func
+     * @return void
+     */
     public function onContactIntercepted($func) {
         $interceptor = new ContactInterceptor($this->api_key);
         if ($interceptor->getContact()->isValid()) {

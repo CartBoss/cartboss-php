@@ -145,7 +145,7 @@ class Order {
      * @param string $id
      */
     public function setId(string $id): void {
-        $this->id = Utils::getHash($id);
+        $this->id = Utils::getHash(trim($id));
     }
 
     /**
