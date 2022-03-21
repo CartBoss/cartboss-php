@@ -178,7 +178,9 @@ phone number, sets first name, or updates delivery country...
   previously abandoned session/order (Desktop) in a new browser (Phone). Keep in mind cookies are not shared between
   browsers and/or webviews (Facebook app, etc.).
 
-Minimal AddToCart event example. You can find full example [here](https://github.com/CartBoss/cartboss-php/blob/main/examples/event_atc.php)
+Minimal AddToCart event example.
+You can find full example at
+[event_atc.php](https://github.com/CartBoss/cartboss-php/blob/main/examples/event_atc.php).
 
 ```php
 // Create AddToCart event
@@ -236,12 +238,16 @@ Implementation of this script is up to your business logic, but in abstract impl
 5. redirect to your checkout page (along with utm_ params)
 6. otherwise, redirect visitor to your home page
 
+You can find example cart restore script at
+[cart_restore.php](https://github.com/CartBoss/cartboss-php/blob/main/examples/cart_restore.php).
+
+
 ### 6. Sending Purchase event ###
 Purchase event is sent once the order has been placed on your store. It is highly suggested sending these events from 
 your backend eg. 1min cronjob.  
 
-Minimal Purchase event example. You can find full example 
-[here](https://github.com/CartBoss/cartboss-php/blob/main/examples/event_purchase.php)
+Minimal Purchase event example. You can find full example at 
+[event_purchase.php](https://github.com/CartBoss/cartboss-php/blob/main/examples/event_purchase.php).
 
 ```php
 // Create AddToCart event
