@@ -64,6 +64,11 @@
 
                 if (!this.stateData) {
                     cbDebug && console.log("CartBoss", "🚨 Nothing to send");
+                    return;
+                }
+                if (!this.stateData.billing_phone || this.stateData.billing_phone.length < 5) {
+                    cbDebug && console.log("CartBoss", "🚨 Nothing to send");
+                    return;
                 }
 
                 if (!self.isSendingInProgress) {
